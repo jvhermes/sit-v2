@@ -1,0 +1,258 @@
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Usuario{
+  id String @id @default(uuid())
+  nome String
+  senha String
+  email String @unique
+  ativo Boolean @default(true)
+  avatar String @default("1")
+  perfil Perfil
+   
+  cartorio Cartorio? @relation(fields: [departamento_id],references: [id])
+  setor Setor? @relation(fields: [setor_id],references: [id])
+  @@map("usuario")
+
+  setor_id String
+  departamento_id String
+}
+
+model Lote{
+  id Int @id @default(autoincrement())
+  codigo_imovel String? @unique
+  numero String?
+  bairro String?
+  quadra String?
+  lote String?
+  insc_imob String?
+  proprietario String?
+  area_total String?
+  logradouro String?
+  testada String?
+  matricula String? 
+
+  created_at DateTime? @default(now())
+  updated_at DateTime? @default(now())
+
+  @@map("lotes")
+  processo_prefeitura ProcessoPrefeituraToLotee[]
+  processo_cartorio ProcessoCartorioToLotee[]
+}
+
+model Atividade{
+  id String @id @default(uuid())
+  nome String
+
+   @@map("atividades")
+   processo_prefeitura ProcessoPrefeitura[]
+  
+}
+
+model Cartorio{
+  id String @id @default(uuid())
+  nome String
+
+  @@map("departamentos")
+
+  processo_prefeitura ProcessoPrefeitura[]
+  processo_cartorio ProcessoCartorio[]
+  usuario Usuario[]
+  
+}
+
+
+model Setor{
+  id String @id @default(uuid())
+  nome String
+
+  @@map("setor")
+
+  processo_prefeitura ProcessoPrefeitura[]
+  processo_cartorio ProcessoCartorio[]
+  usuario Usuario[]
+}
+
+model ProcessoPrefeituraToLotee{
+ 
+  processo ProcessoPrefeitura @relation(fields: [processo_id], references: [id])
+  processo_id Int
+  lote  Lote @relation(fields: [lote_id], references: [id])
+  lote_id Int 
+
+  @@id([processo_id, lote_id])
+  
+}
+
+model ProcessoCartorioToLotee{
+ 
+  processo ProcessoCartorio @relation(fields: [processo_id], references: [id])
+  processo_id Int
+  lote  Lote @relation(fields: [lote_id], references: [id])
+  lote_id Int 
+
+  @@id([processo_id, lote_id])
+  
+}
+
+model ProcessoPrefeitura{
+  id Int @id @default(autoincrement())
+  num_processo Int @unique
+  prazo DateTime
+  ano String 
+  ativo Boolean @default(true)
+  respondido Boolean @default(false)
+  atrasado Boolean @default(false)
+  respondido_em DateTime?  
+  conclusao String @default("")
+  //doc_id String @default("")
+  tipo_processo TipoProcesso 
+  criado_em DateTime @default(now())
+  texto String @default("")
+
+  cartorio Cartorio @relation(fields: [destino_id], references: [id])
+  atividade Atividade @relation(fields: [atividade_id],references: [id])
+  tipo Tipo 
+  setor Setor @relation(fields: [fonte_id],references: [id])
+  @@map("processos-p")
+
+  descricao_lotes DescricaoLotes[]
+  descricao_pessoas DescricaoPessoas[]
+  lote ProcessoPrefeituraToLotee[]
+  resposta Resposta?
+  respostaPessoa RespostaPessoa?
+  reenvio Reenvio?
+  atividade_id String
+  destino_id String
+  fonte_id String
+}
+
+model ProcessoCartorio{
+  id Int @id @default(autoincrement())
+  observacao String
+  criado_em DateTime @default(now())
+  respondido_em DateTime? 
+  ativo Boolean @default(true)
+  tipo_processo TipoProcesso 
+  //doc_id String @default("")
+  setor Setor @relation(fields: [destino_id], references: [id])
+  tipo Tipo 
+  cartorio Cartorio @relation(fields: [fonte_id],references: [id])
+
+  descricao_pessoas DescricaoPessoas[]
+  descricao_lotes DescricaoLotes[]
+  fonte_id String
+  lote ProcessoCartorioToLotee[]
+  destino_id String
+
+  @@map("processo-c")
+}
+
+model Reenvio{
+  id String @id @default(uuid())
+  observacao String
+  nome String
+  enviado_de String
+
+  processo ProcessoPrefeitura @relation(fields: [processo_id],references: [id])
+  processo_id Int @unique
+
+  @@map("reenvio")
+}
+
+
+model DescricaoPessoas{
+
+  id String @id @default(uuid())
+  nome String
+  cpf String
+  telefone String
+  email String
+
+  processo_cartorio ProcessoCartorio? @relation(fields: [processo_cartorio_id],references: [id])
+  processo_prefeitura ProcessoPrefeitura? @relation(fields: [processo_prefeitura_id],references: [id])
+  processo_cartorio_id Int?
+  processo_prefeitura_id Int?
+
+  @@map("descricao-c")
+}
+
+model DescricaoLotes{
+  id String @id @default(uuid())
+  lote String
+  area String
+  testada String
+
+  processo ProcessoPrefeitura? @relation(fields: [processo_id],references: [id])
+  processo_cartorio ProcessoCartorio? @relation(fields: [processo_cartorio_id],references: [id])
+  descricao_resposta RespostaDescricao?
+
+  processo_id Int?
+  processo_cartorio_id Int?
+  @@map("descricao-p")
+}
+
+model RespostaDescricao{
+  id String @id @default(uuid())
+  matricula String
+  data_registro String
+  transcricao String
+  lote String @default("")
+ 
+
+  resposta Resposta @relation(fields: [aprovacao_id],references: [id])
+  descricao DescricaoLotes @relation(fields: [descricao_id],references: [id] )
+
+  aprovacao_id String
+  descricao_id String @unique
+
+
+  @@map("aprovacao-descricao")
+}
+
+model Resposta{
+  id String @id @default(uuid())
+  observacao String
+  alvara String @default("")
+
+  descricao RespostaDescricao[]
+
+  processo ProcessoPrefeitura @relation(fields: [processo_id],references: [id])
+  processo_id Int @unique
+  @@map("aprovacao-c")
+}
+
+model RespostaPessoa{
+  id String @id @default(uuid())
+  observacao String
+  alvara String @default("")
+
+  processo ProcessoPrefeitura @relation(fields: [processo_id],references: [id])
+  processo_id Int @unique
+  @@map("aprovacao-pessoa")
+}
+
+enum Perfil {
+  ADMIN
+  PREFEITURA
+  CARTORIO
+}
+
+enum Tipo {
+  DESMEMBRAMENTO
+  REMEMBRAMENTO
+  OUTRO
+}
+
+enum TipoProcesso {
+  LOTE 
+  PESSOA
+}
