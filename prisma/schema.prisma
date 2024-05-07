@@ -18,30 +18,30 @@ model Usuario{
   avatar String @default("1")
   perfil Perfil
    
-  cartorio Cartorio? @relation(fields: [departamento_id],references: [id])
+  cartorio Cartorio? @relation(fields: [cartorio_id],references: [id])
   setor Setor? @relation(fields: [setor_id],references: [id])
   @@map("usuario")
 
-  setor_id String
-  departamento_id String
+  setor_id String?
+  cartorio_id String?
 }
 
 model Lote{
   id Int @id @default(autoincrement())
-  codigo_imovel String? @unique
-  numero String?
-  bairro String?
-  quadra String?
-  lote String?
-  insc_imob String?
-  proprietario String?
-  area_total String?
-  logradouro String?
-  testada String?
-  matricula String? 
+  codigo_imovel String @unique
+  numero String @default("")
+  bairro String @default("")
+  quadra String @default("")
+  lote String @default("")
+  insc_imob String @default("")
+  proprietario String @default("")
+  area_total String @default("")
+  logradouro String @default("")
+  testada String @default("")
+  matricula String @default("")
 
-  created_at DateTime? @default(now())
-  updated_at DateTime? @default(now())
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
 
   @@map("lotes")
   processo_prefeitura ProcessoPrefeituraToLotee[]
@@ -54,6 +54,7 @@ model Atividade{
 
    @@map("atividades")
    processo_prefeitura ProcessoPrefeitura[]
+  processo_carotorio ProcessoCartorio[]
   
 }
 
@@ -105,22 +106,21 @@ model ProcessoCartorioToLotee{
 
 model ProcessoPrefeitura{
   id Int @id @default(autoincrement())
-  num_processo Int @unique
+  num_processo String @unique
   prazo DateTime
   ano String 
   ativo Boolean @default(true)
-  respondido Boolean @default(false)
-  atrasado Boolean @default(false)
+  status Status @default(PENDENTE)
   respondido_em DateTime?  
   conclusao String @default("")
-  //doc_id String @default("")
-  tipo_processo TipoProcesso 
+  doc_id String @default("")
+  tipo Tipo 
   criado_em DateTime @default(now())
   texto String @default("")
 
   cartorio Cartorio @relation(fields: [destino_id], references: [id])
   atividade Atividade @relation(fields: [atividade_id],references: [id])
-  tipo Tipo 
+   
   setor Setor @relation(fields: [fonte_id],references: [id])
   @@map("processos-p")
 
@@ -137,20 +137,24 @@ model ProcessoPrefeitura{
 
 model ProcessoCartorio{
   id Int @id @default(autoincrement())
+  num_processo String @unique
   observacao String
   criado_em DateTime @default(now())
   respondido_em DateTime? 
   ativo Boolean @default(true)
-  tipo_processo TipoProcesso 
-  //doc_id String @default("")
+  ano String
+   
+  doc_id String @default("")
   setor Setor @relation(fields: [destino_id], references: [id])
   tipo Tipo 
   cartorio Cartorio @relation(fields: [fonte_id],references: [id])
+  atividade Atividade @relation(fields: [atividade_id],references: [id])
 
   descricao_pessoas DescricaoPessoas[]
   descricao_lotes DescricaoLotes[]
   fonte_id String
   lote ProcessoCartorioToLotee[]
+  atividade_id String
   destino_id String
 
   @@map("processo-c")
@@ -252,7 +256,10 @@ enum Tipo {
   OUTRO
 }
 
-enum TipoProcesso {
-  LOTE 
-  PESSOA
+enum Status {
+  RESPONDIDO
+  ATRASADO
+  PENDENTE
+  RESPONDIDO_COM_ATRASO
 }
+
