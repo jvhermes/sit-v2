@@ -47,7 +47,6 @@ export function Buttons({ status, processo }: ButtonsProps) {
         {((status === "RESPONDIDO" || status === "RESPONDIDO_COM_ATRASO") && processo.ativo) && (
           <div className="flex gap-4">
             <Button variant={"outline"} onClick={() => openRespostaEvent()}>Abrir Encerramento</Button>
-            <Button className="flex gap-2 " variant={"outline"}>Gerar PDF <FaFilePdf className="text-red-600" size={17} /></Button>
             {/* <Button variant={"outline"}>Reenvio Interno</Button> */}
           </div>
         )}
