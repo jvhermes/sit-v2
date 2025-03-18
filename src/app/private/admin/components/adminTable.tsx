@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
   tipo: string
 }
 
+
 export function AdminTable<TData, TValue>({
   columns,
   data,
@@ -109,6 +110,8 @@ export function AdminTable<TData, TValue>({
         }
       })
     }
+
+    
   }
 
   const handleUpdateAdmin = async (values: z.infer<typeof AdminCrudSquema>) => {

@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, Eye,Trash2} from "lucide-react"
 export type Processos = {
     id: number
     numero: string,
@@ -20,37 +20,36 @@ export type Processos = {
 export const columns: ColumnDef<Processos>[] = [
     {
         id: "select",
-        header:"Selecionar",
+        header: "Selecionar",
         cell: ({ row }) => (
             <Checkbox
                 checked={row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
                 aria-label="Select row"
-                
+
             />
         ),
-        enableSorting: false,
-        enableHiding: false,
+
     },
     {
-        accessorKey:"numero",
+        accessorKey: "numero",
         header: ({ column }) => {
             return (
-              <Button
-                variant="ghost"
-                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              >
-                Número
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-              </Button>
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Número
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
             )
-          },
-      
+        },
+
     },
     {
         accessorKey: "tipo",
         header: "Tipo de Processo",
-     
+
     },
 
     {
@@ -80,7 +79,7 @@ export const columns: ColumnDef<Processos>[] = [
     {
         accessorKey: "status",
         header: "Status",
-      
+
         cell: (props) => {
             const value = props.getValue()
             if (value === 'pendente') {
@@ -96,6 +95,17 @@ export const columns: ColumnDef<Processos>[] = [
                 return <span className="bg-yellow-600 px-3 text-white py-2 rounded">Respondido</span>
             }
         }
+
+    },
+    {
+        header: "Ações",
+        cell: ({ row }) => (
+           
+            <div className="flex gap-2">
+                <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-400"><Eye /></Button>
+                <Button className="p-1 h-8 bg-red-500 hover:bg-red-400"><Trash2 /></Button>
+            </div>
+        ),
 
     },
 ]

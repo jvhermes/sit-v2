@@ -67,7 +67,7 @@ export const createProcesso = async (values: z.infer<typeof CreateProcessSquema>
             prazo,
             ano,
             texto,
-            tipo,
+            tipo_id: parseInt(tipo),
             atividade_id: atividade,
             destino_id: cartorio,
             fonte_id: session.user.setor_id
@@ -82,8 +82,8 @@ export const createProcesso = async (values: z.infer<typeof CreateProcessSquema>
             }
         })
     }
-    if (tipo !== "OUTRO" && descricao_lotes) {
-        const lotesdesc = tipo === "DESMEMBRAMENTO" ? descricao_lotes : descricao_lotes.length > 1 ? descricao_lotes.slice(1) : descricao_lotes;
+    if ((tipo !== '2' && tipo !== '1') && descricao_lotes) {
+        const lotesdesc = tipo === '1' ? descricao_lotes : descricao_lotes.length > 1 ? descricao_lotes.slice(1) : descricao_lotes;
 
         for await (let item of lotesdesc) {
             await prisma.descricaoLotes.create({
@@ -97,7 +97,7 @@ export const createProcesso = async (values: z.infer<typeof CreateProcessSquema>
         }
     }
 
-    if (tipo === "OUTRO" && descricao_pessoas) {
+    if ((tipo !== '2' && tipo !== '1') && descricao_pessoas) {
         for await (let item of descricao_pessoas) {
             await prisma.descricaoPessoas.create({
                 data: {
@@ -131,6 +131,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
                         lote: true
                     }
                 },
+                tipo:true
             }
 
         })
@@ -147,7 +148,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
                 return {
                     id: item.id,
                     numero: item.num_processo.toString(),
-                    tipo: item.tipo.toLowerCase(),
+                    tipo: item.tipo.nome,
                     proprietario: item.lote[0].lote.proprietario || "",
                     bairro: item.lote[0].lote.bairro || "",
                     quadra: item.lote[0].lote.quadra || "",
@@ -160,7 +161,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
             return {
                 id: item.id,
                 numero: item.num_processo.toString(),
-                tipo: item.tipo.toLowerCase(),
+                tipo: item.tipo.nome,
                 proprietario: item.lote[0].lote.proprietario || "",
                 bairro: item.lote[0].lote.bairro || "",
                 quadra: item.lote[0].lote.quadra || "",
@@ -190,6 +191,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
                         lote: true
                     }
                 },
+                tipo:true
             }
 
         })
@@ -206,7 +208,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
                 return {
                     id: item.id,
                     numero: item.num_processo.toString(),
-                    tipo: item.tipo.toLowerCase(),
+                    tipo: item.tipo.nome,
                     proprietario: item.lote[0].lote.proprietario || "",
                     bairro: item.lote[0].lote.bairro || "",
                     quadra: item.lote[0].lote.quadra || "",
@@ -219,7 +221,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
             return {
                 id: item.id,
                 numero: item.num_processo.toString(),
-                tipo: item.tipo.toLowerCase(),
+                tipo: item.tipo.nome,
                 proprietario: item.lote[0].lote.proprietario || "",
                 bairro: item.lote[0].lote.bairro || "",
                 quadra: item.lote[0].lote.quadra || "",
@@ -245,6 +247,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
                         lote: true
                     }
                 },
+                tipo:true
             }
 
         })
@@ -261,7 +264,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
                 return {
                     id: item.id,
                     numero: item.num_processo.toString(),
-                    tipo: item.tipo.toLowerCase(),
+                    tipo: item.tipo.nome,
                     proprietario: item.lote[0].lote.proprietario || "",
                     bairro: item.lote[0].lote.bairro || "",
                     quadra: item.lote[0].lote.quadra || "",
@@ -274,7 +277,7 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
             return {
                 id: item.id,
                 numero: item.num_processo.toString(),
-                tipo: item.tipo.toLowerCase(),
+                tipo: item.tipo.nome,
                 proprietario: item.lote[0].lote.proprietario || "",
                 bairro: item.lote[0].lote.bairro || "",
                 quadra: item.lote[0].lote.quadra || "",
@@ -296,12 +299,13 @@ export const fetchProcessos = async (ativo: boolean): Promise<Processos[]> => {
 
 export const fechData = async () => {
 
-    const [atividades, cartorios, lotes] = await Promise.all([
+    const [atividades, cartorios, lotes,tipos] = await Promise.all([
         prisma.atividade.findMany(),
         prisma.cartorio.findMany(),
-        prisma.lote.findMany()
+        prisma.lote.findMany(),
+        prisma.tipoDeProcesso.findMany()
     ])
-    return { atividades, cartorios, lotes }
+    return { atividades, cartorios, lotes,tipos }
 }
 
 

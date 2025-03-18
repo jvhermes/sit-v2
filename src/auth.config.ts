@@ -32,7 +32,7 @@ export default {
       return null
     }
   })],
-  secret: process.env.AUTH_SECRET,
+  secret: process.env.AUTH_SECRET || "57nMxzES8oWN0ZJj8VQhzpXEFJaBInCnG2AlAVXBXNo",
   callbacks:{
     async jwt({token}) {
         if(!token.sub) return token

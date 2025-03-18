@@ -46,7 +46,7 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { useState, useRef, useCallback, ChangeEvent } from "react";
 import { CreateProcessSquema } from "@/schemas/process";
-import { Atividade, Cartorio, Lote } from "@prisma/client";
+import { Atividade, Cartorio, Lote, TipoDeProcesso } from "@prisma/client";
 import Link from "next/link";
 import { toast } from "sonner"
 import {
@@ -59,17 +59,18 @@ import {
 import { Command as CommandPrimitive } from "cmdk";
 import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
-import { Label } from "@radix-ui/react-label";
+
 import { createProcesso } from "@/actions/processo";
 
 type CreateProcessProps = {
     atividades: Atividade[]
     cartorios: Cartorio[]
+    tipos: TipoDeProcesso[]
     lotes: Lote[]
 }
 
 
-export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProcessProps) {
+export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: CreateProcessProps) {
 
     const [bairro, setBairro] = useState("")
     const [quadra, setQuadra] = useState("")
@@ -183,7 +184,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProces
             prazo: add(new Date(), {
                 days: 60
             }),
-            tipo: "DESMEMBRAMENTO",
+            tipo:'1',
             descricao_lotes: [{ lote: "", area: "", testada: "" }],
             descricao_pessoas: [{ nome: "", cpf: "", email: "", telefone: "" }]
         }
@@ -239,11 +240,11 @@ export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProces
 
     const handleSubmit = async (values: z.infer<typeof CreateProcessSquema>) => {
 
-        
-        const lote_ids = values.tipo === "DESMEMBRAMENTO" ? loteInfos : selected
 
-        const res = createProcesso(values,lote_ids)
-        
+        const lote_ids = values.tipo === '1' ? loteInfos : selected
+
+        const res = createProcesso(values, lote_ids)
+
         if (!res) {
             toast.error("Erro nos campos ou Número de Processo já utilizado", {
                 duration: 3000,
@@ -273,7 +274,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProces
 
             </div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="p-10 rounded flex-col mb-5 border flex  gap-6 " >
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="p-10 rounded bg-white flex-col mb-5 border flex  gap-6 " >
                     <h2 className="text-lg">Dados:</h2>
                     <div className="flex gap-6 flex-wrap py-5 ">
                         <FormField name="num_processo" control={form.control} render={({ field }) => (
@@ -367,16 +368,18 @@ export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProces
                         <FormField name="tipo" control={form.control} render={({ field }) => (
                             <FormItem >
                                 <FormLabel>Tipo de Processo</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select onValueChange={field.onChange} defaultValue={field.value.toLocaleString()}>
                                     <FormControl>
                                         <SelectTrigger className="w-[270px]">
                                             <SelectValue />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="DESMEMBRAMENTO">Desmembramento</SelectItem>
-                                        <SelectItem value="REMEMBRAMENTO">Remembramento</SelectItem>
-                                        <SelectItem value="OUTRO">Outro</SelectItem>
+                                        {tipos.map((item) => {
+                                            return (
+                                                <SelectItem key={item.id} value={item.id.toLocaleString()}>{item.nome}</SelectItem>
+                                            )
+                                        })}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -471,54 +474,54 @@ export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProces
 
                     </div>
                     <div>
-                        {tipoState === "DESMEMBRAMENTO" && (
+                        {tipoState === '1' && (
                             <div>
                                 <div className="mb-4">
-                                <Select value={lote_id} onValueChange={setLote_id} >
-                                    <SelectTrigger >
-                                        <SelectValue placeholder="Lotes" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
+                                    <Select value={lote_id} onValueChange={setLote_id} >
+                                        <SelectTrigger >
+                                            <SelectValue placeholder="Lotes" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
 
-                                            <Button
-                                                className="w-full h-[25px] px-2"
-                                                variant="secondary"
-                                                size="sm"
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    setLote_id("")
-                                                }}
-                                                type="button"
-                                            >
-                                                Limpar
-                                            </Button>
+                                                <Button
+                                                    className="w-full h-[25px] px-2"
+                                                    variant="secondary"
+                                                    size="sm"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        setLote_id("")
+                                                    }}
+                                                    type="button"
+                                                >
+                                                    Limpar
+                                                </Button>
 
-                                            {filtredLotes.map((item) => {
-                                                if (item.insc_imob === insc_imob && insc_imob !== "") {
-                                                    return (
-                                                        <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
-                                                    )
-                                                }
-                                                if (item.codigo_imovel === codigo && codigo !== "") {
-                                                    return (
-                                                        <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
-                                                    )
-                                                }
-                                                if (item.quadra === quadra && item.bairro === bairro && insc_imob === "" && codigo === "") {
-                                                    return (
-                                                        <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
-                                                    )
-                                                }
+                                                {filtredLotes.map((item) => {
+                                                    if (item.insc_imob === insc_imob && insc_imob !== "") {
+                                                        return (
+                                                            <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
+                                                        )
+                                                    }
+                                                    if (item.codigo_imovel === codigo && codigo !== "") {
+                                                        return (
+                                                            <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
+                                                        )
+                                                    }
+                                                    if (item.quadra === quadra && item.bairro === bairro && insc_imob === "" && codigo === "") {
+                                                        return (
+                                                            <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
+                                                        )
+                                                    }
 
-                                            })}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
+                                                })}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                {loteInfos.map((item,index) => {
+                                {loteInfos.map((item, index) => {
                                     return (
-                                        <div key={index}  className="my-2">
+                                        <div key={index} className="my-2">
                                             <Card>
                                                 <CardContent className="p-4">
                                                     <span className="px-3"> Lote:  {item.lote}</span>
@@ -625,7 +628,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProces
                             )}
                     </div>
 
-                    {tipoState === "REMEMBRAMENTO" && (
+                    {tipoState === '2' && (
                         <> <h2 className="text-lg">Novas Descrições:</h2>
                             <div>
                                 <Table className="border">
@@ -687,7 +690,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProces
                             </div>
                         </>
                     )}
-                    {tipoState === "DESMEMBRAMENTO" && (
+                    {tipoState === '1' && (
                         <> <h2 className="text-lg">Novas Descrições:</h2>
                             <div className="flex py-1 gap-3 items-center">
                                 Adicionar Campos:
@@ -760,7 +763,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes }: CreateProces
                             </div>
                         </>
                     )}
-                    {tipoState === "OUTRO" && (
+                    {(tipoState !== '2' && tipoState !== '1') && (
                         <> <h2 className="text-lg">Novas Descrições:</h2>
                             <div className="flex py-1 gap-3 items-center">
                                 Adicionar Campos:

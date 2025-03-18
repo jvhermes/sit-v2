@@ -46,7 +46,7 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { useState, useRef, useCallback, ChangeEvent } from "react";
 import { CreateProcessCartorioSquema } from "@/schemas/processCartorio";
-import { Atividade, Cartorio, Lote, Setor } from "@prisma/client";
+import { Atividade, Cartorio, Lote, Setor, TipoDeProcesso } from "@prisma/client";
 import Link from "next/link";
 import { toast } from "sonner"
 import {
@@ -65,11 +65,12 @@ import { createProcessoCartorio } from "@/actions/processoCartorio";
 type CreateProcessProps = {
     atividades: Atividade[]
     setores: Setor[]
+   
     lotes: Lote[]
 }
 
 
-export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessProps) {
+export function CreateProcessForm({ atividades, setores, lotes}: CreateProcessProps) {
 
     const [bairro, setBairro] = useState("")
     const [quadra, setQuadra] = useState("")

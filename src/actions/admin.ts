@@ -27,6 +27,8 @@ export const handleNewNome = async (tipo:string,nome:string) => {
         const setor = await createSetor(nome)
         if(setor){
             revalidatePath("/private/admin")
+            revalidatePath("/private/prefeitura/criar")
+            revalidatePath("/private/cartorio/criar")
         }
         return(setor)
     }

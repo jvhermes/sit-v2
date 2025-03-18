@@ -2,11 +2,11 @@ import { NextResponse } from "next/server";
 import prisma from "@/utils/db";
 import bcrypt from "bcryptjs"
 
-export async function POST() {
+export async function GET() {
     
     const user = await prisma.usuario.findMany()
 
-    if(!user){
+    if(user.length <= 0){
 
         const setor = await prisma.setor.create({
             data:{
@@ -19,9 +19,22 @@ export async function POST() {
                 nome:"cartorio1"
             }
         })
+       
+        const tipo1 = await prisma.tipoDeProcesso.create({
+            data:{
+                nome:"Desmembramento",
+                tipo:"DESMEMBRAMENTO"
+            }
+        })
+        const tipo2 = await prisma.tipoDeProcesso.create({
+            data:{
+                nome:"Remembramento",
+                tipo:"REMEMBRAMENTO"
+            }
+        })
         const hashedSenha = await bcrypt.hash("123456", 10);
 
-        const user = await prisma.usuario.create({
+        const userCriado = await prisma.usuario.create({
             data:{
                 nome:"admin",
                 senha:hashedSenha,
@@ -32,11 +45,11 @@ export async function POST() {
                 perfil:"ADMIN"
             }
         })
-        return NextResponse.json(user)
+        return NextResponse.json(userCriado)
 
     }else{
         
-        return NextResponse.json("usuario inicial já criado")
+        return NextResponse.json(user)
     }
 
 }

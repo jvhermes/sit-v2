@@ -67,14 +67,17 @@ export function ProcessCartorioTable<TData, TValue>({ columns, data, }: DataTabl
         <div >
             <div className="py-3 flex justify-between">
                 {(table.getRowCount() > 1) &&
-                    (<Link href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
+                    (<Link className={`${!table.getIsSomeRowsSelected() ? 'pointer-events-none' : ''}`}  href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
                         <Button disabled={!table.getIsSomeRowsSelected()} variant={"outline"}>Visualizar</Button>
                     </Link>
-                    ) || (
-                        <Link href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
-                            <Button disabled={!table.getIsAllRowsSelected()} variant={"outline"}>Visualizar</Button>
-                        </Link>
-                    )
+                    ) 
+                }
+                {(table.getRowCount() <= 1) &&
+                    ((<Link  className={`${!table.getIsAllRowsSelected() ? 'pointer-events-none' : ''}`} href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
+                        <Button disabled={!table.getIsAllRowsSelected()} variant={"outline"}>Visualizar</Button>
+                    </Link>
+
+                    ))
                 }
                 <Link href={"/private/cartorio/criar"}>
                     <Button variant={"outline"}  >Novo Processo</Button>

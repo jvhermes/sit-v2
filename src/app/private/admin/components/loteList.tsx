@@ -17,7 +17,7 @@ async function parseCSV(file: File): Promise<any[]> {
 
             complete: function (res) {
                 res.data.forEach((item: any) => {
-                    const fileLineSplit = item[0];
+                    const fileLineSplit = item;
                     lotesRes.push(fileLineSplit);
                 });
 
@@ -62,6 +62,7 @@ export function LoteList() {
             })
         } else {
             const lotesRes = await parseCSV(file);
+            console.log(lotesRes)
             const res =  saveCSV(lotesRes)
 
             if(!res){
@@ -88,7 +89,7 @@ export function LoteList() {
             <p className="p-1 text-sm">*apenas arquivos do tipo CSV</p>
 
             <form onSubmit={(e) => handleSubmit(e)} className="flex flex-col items-center gap-5 pt-5">
-                <Input type="file"  accept={acceptableCSVFileTypes}placeholder="csv" onChange={(e) => handleChange(e)} />
+                <Input type="file"  accept={acceptableCSVFileTypes} placeholder="csv" onChange={(e) => handleChange(e)} />
 
                 <Button type="submit">Salvar</Button>
 

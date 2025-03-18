@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { Tipo } from "@prisma/client"
+
 
 
 export const CreateProcessSquema = z.object({
@@ -16,7 +16,7 @@ export const CreateProcessSquema = z.object({
     cartorio: z.string({
         required_error: "Campo Obrigatório"
     }),
-    tipo: z.nativeEnum(Tipo, {
+    tipo: z.string( {
         required_error: "Campo Obrigatório"
     }),
     ano: z.string().min(2, { message: "Campo Obrigatório" }),

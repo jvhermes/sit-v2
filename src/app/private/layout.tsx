@@ -20,9 +20,9 @@ export default function Layout({
     };
 
     return (
-        <div className="w-full h-full">
+        <div className="w-full h-full bg-gray-100 ">
             <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-            <div className={`  transition-all  items-center flex-col flex duration-300 ${isSidebarOpen ? 'ml-[230px]' : 'ml-0'} `}>
+            <div className={`  transition-all   items-center flex-col flex duration-300 ${isSidebarOpen ? 'ml-[230px]' : 'ml-0'} `}>
                 <div className="  w-full flex justify-between  h-15 px-8 py-4">
                     <Button onClick={toggleSidebar} className="px-3" ><HiOutlineMenu size={22} /></Button>
                     <form action={async() => {

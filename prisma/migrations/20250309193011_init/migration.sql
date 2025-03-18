@@ -67,6 +67,15 @@ CREATE TABLE "setor" (
 );
 
 -- CreateTable
+CREATE TABLE "TipoDeProcesso" (
+    "id" SERIAL NOT NULL,
+    "nome" TEXT NOT NULL,
+    "tipo" "Tipo" NOT NULL,
+
+    CONSTRAINT "TipoDeProcesso_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "ProcessoPrefeituraToLotee" (
     "processo_id" INTEGER NOT NULL,
     "lote_id" INTEGER NOT NULL,
@@ -85,7 +94,7 @@ CREATE TABLE "ProcessoCartorioToLotee" (
 -- CreateTable
 CREATE TABLE "processos-p" (
     "id" SERIAL NOT NULL,
-    "num_processo" INTEGER NOT NULL,
+    "num_processo" TEXT NOT NULL,
     "prazo" TIMESTAMP(3) NOT NULL,
     "ano" TEXT NOT NULL,
     "ativo" BOOLEAN NOT NULL DEFAULT true,
@@ -93,9 +102,9 @@ CREATE TABLE "processos-p" (
     "respondido_em" TIMESTAMP(3),
     "conclusao" TEXT NOT NULL DEFAULT '',
     "doc_id" TEXT NOT NULL DEFAULT '',
-    "tipo" "Tipo" NOT NULL,
     "criado_em" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "texto" TEXT NOT NULL DEFAULT '',
+    "tipo_id" INTEGER NOT NULL,
     "atividade_id" TEXT NOT NULL,
     "destino_id" TEXT NOT NULL,
     "fonte_id" TEXT NOT NULL,
@@ -106,17 +115,17 @@ CREATE TABLE "processos-p" (
 -- CreateTable
 CREATE TABLE "processo-c" (
     "id" SERIAL NOT NULL,
-    "num_processo" INTEGER NOT NULL,
+    "num_processo" TEXT NOT NULL,
     "observacao" TEXT NOT NULL,
     "criado_em" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "respondido_em" TIMESTAMP(3),
     "ativo" BOOLEAN NOT NULL DEFAULT true,
     "ano" TEXT NOT NULL,
     "doc_id" TEXT NOT NULL DEFAULT '',
-    "tipo" "Tipo" NOT NULL,
     "fonte_id" TEXT NOT NULL,
     "atividade_id" TEXT NOT NULL,
     "destino_id" TEXT NOT NULL,
+    "tipo_id" INTEGER NOT NULL,
 
     CONSTRAINT "processo-c_pkey" PRIMARY KEY ("id")
 );
@@ -239,6 +248,9 @@ ALTER TABLE "processos-p" ADD CONSTRAINT "processos-p_destino_id_fkey" FOREIGN K
 ALTER TABLE "processos-p" ADD CONSTRAINT "processos-p_atividade_id_fkey" FOREIGN KEY ("atividade_id") REFERENCES "atividades"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "processos-p" ADD CONSTRAINT "processos-p_tipo_id_fkey" FOREIGN KEY ("tipo_id") REFERENCES "TipoDeProcesso"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "processos-p" ADD CONSTRAINT "processos-p_fonte_id_fkey" FOREIGN KEY ("fonte_id") REFERENCES "setor"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
@@ -249,6 +261,9 @@ ALTER TABLE "processo-c" ADD CONSTRAINT "processo-c_fonte_id_fkey" FOREIGN KEY (
 
 -- AddForeignKey
 ALTER TABLE "processo-c" ADD CONSTRAINT "processo-c_atividade_id_fkey" FOREIGN KEY ("atividade_id") REFERENCES "atividades"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "processo-c" ADD CONSTRAINT "processo-c_tipo_id_fkey" FOREIGN KEY ("tipo_id") REFERENCES "TipoDeProcesso"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "reenvio" ADD CONSTRAINT "reenvio_processo_id_fkey" FOREIGN KEY ("processo_id") REFERENCES "processos-p"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
