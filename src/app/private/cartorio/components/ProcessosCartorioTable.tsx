@@ -67,13 +67,13 @@ export function ProcessCartorioTable<TData, TValue>({ columns, data, }: DataTabl
         <div >
             <div className="py-3 flex justify-between">
                 {(table.getRowCount() > 1) &&
-                    (<Link className={`${!table.getIsSomeRowsSelected() ? 'pointer-events-none' : ''}`}  href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
+                    (<Link className={`${!table.getIsSomeRowsSelected() ? 'pointer-events-none' : ''}`} href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
                         <Button disabled={!table.getIsSomeRowsSelected()} variant={"outline"}>Visualizar</Button>
                     </Link>
-                    ) 
+                    )
                 }
                 {(table.getRowCount() <= 1) &&
-                    ((<Link  className={`${!table.getIsAllRowsSelected() ? 'pointer-events-none' : ''}`} href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
+                    ((<Link className={`${!table.getIsAllRowsSelected() ? 'pointer-events-none' : ''}`} href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
                         <Button disabled={!table.getIsAllRowsSelected()} variant={"outline"}>Visualizar</Button>
                     </Link>
 
@@ -84,121 +84,123 @@ export function ProcessCartorioTable<TData, TValue>({ columns, data, }: DataTabl
 
                 </Link>
             </div>
-            <div className="flex items-center flex-wrap gap-2  py-4">
-                <div className="m-2">
-                    <p>Filtros:</p>
+            <div className="bg-white p-5 border">
+                <div className="flex items-center flex-wrap gap-2  py-4">
+                    <div className="m-2">
+                        <p>Filtros:</p>
+                    </div>
+                    <Input
+                        placeholder="N° do Processo "
+                        value={(table.getColumn("numero")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("numero")?.setFilterValue(event.target.value)
+                        }
+                        className="w-[250px]"
+                    />
+                    <Input
+                        placeholder="Proprietário "
+                        value={(table.getColumn("proprietario")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("proprietario")?.setFilterValue(event.target.value)
+                        }
+                        className="w-[250px]"
+                    />
+                    <Input
+                        placeholder="Bairro "
+                        value={(table.getColumn("bairro")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("bairro")?.setFilterValue(event.target.value)
+                        }
+                        className="w-[250px]"
+                    />
+                    <Input
+                        placeholder="Quadra"
+                        value={(table.getColumn("quadra")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("quadra")?.setFilterValue(event.target.value)
+                        }
+                        className="w-[250px]"
+                    />
+                    <Input
+                        placeholder="Lote "
+                        value={(table.getColumn("lote")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("lote")?.setFilterValue(event.target.value)
+                        }
+                        className="w-[250px]"
+                    />
+                    <Input
+                        placeholder="Criado em"
+                        value={(table.getColumn("criado")?.getFilterValue() as string) ?? ""}
+                        onChange={(event) =>
+                            table.getColumn("criado")?.setFilterValue(event.target.value)
+                        }
+                        className="w-[250px]"
+                    />
+
+
+
                 </div>
-                <Input
-                    placeholder="N° do Processo "
-                    value={(table.getColumn("numero")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("numero")?.setFilterValue(event.target.value)
-                    }
-                    className="w-[250px]"
-                />
-                <Input
-                    placeholder="Proprietário "
-                    value={(table.getColumn("proprietario")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("proprietario")?.setFilterValue(event.target.value)
-                    }
-                    className="w-[250px]"
-                />
-                <Input
-                    placeholder="Bairro "
-                    value={(table.getColumn("bairro")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("bairro")?.setFilterValue(event.target.value)
-                    }
-                    className="w-[250px]"
-                />
-                <Input
-                    placeholder="Quadra"
-                    value={(table.getColumn("quadra")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("quadra")?.setFilterValue(event.target.value)
-                    }
-                    className="w-[250px]"
-                />
-                <Input
-                    placeholder="Lote "
-                    value={(table.getColumn("lote")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("lote")?.setFilterValue(event.target.value)
-                    }
-                    className="w-[250px]"
-                />
-                <Input
-                    placeholder="Criado em"
-                    value={(table.getColumn("criado")?.getFilterValue() as string) ?? ""}
-                    onChange={(event) =>
-                        table.getColumn("criado")?.setFilterValue(event.target.value)
-                    }
-                    className="w-[250px]"
-                />
-
-
-
-            </div>
-            <Table className="rounded-md border">
-                <TableHeader>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead key={header.id} className="bg-gray-200 text-gray-700">
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </TableHead>
-                                )
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody>
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && "selected"}
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
+                <Table className="rounded-md border">
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id} className="bg-gray-200 text-gray-700">
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    )
+                                })}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                Nenhum Processo Encontrado
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-            <div className="flex items-center justify-end space-x-2 py-4">
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
-                    Anterior
-                </Button>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Próxima
-                </Button>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                    Nenhum Processo Encontrado
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+                <div className="flex items-center justify-end space-x-2 py-4">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        Anterior
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Próxima
+                    </Button>
+                </div>
             </div>
         </div>
     )

@@ -269,7 +269,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
 
             <div className="py-6 ">
                 <Link href={"/private/prefeitura"}>
-                    <Button variant={"secondary"}>Retornar</Button>
+                    <Button variant={"outline"}>Retornar</Button>
                 </Link>
 
             </div>

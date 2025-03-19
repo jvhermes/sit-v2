@@ -3,7 +3,8 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, Eye,Trash2} from "lucide-react"
+
 export type ProcessosCartorio = {
     id: number
     numero: string,
@@ -70,6 +71,17 @@ export const columnsCartorio: ColumnDef<ProcessosCartorio>[] = [
     {
         accessorKey: "criado",
         header: "Criado em",
+    },
+    {
+        header: "Ações",
+        cell: ({ row }) => (
+           
+            <div className="flex gap-2">
+                <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-400"><Eye /></Button>
+                <Button className="p-1 h-8 bg-red-500 hover:bg-red-400"><Trash2 /></Button>
+            </div>
+        ),
+
     },
 
 ]

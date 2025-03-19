@@ -18,19 +18,7 @@ export type Processos = {
 }
 
 export const columns: ColumnDef<Processos>[] = [
-    {
-        id: "select",
-        header: "Selecionar",
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
 
-            />
-        ),
-
-    },
     {
         accessorKey: "numero",
         header: ({ column }) => {
