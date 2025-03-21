@@ -3,9 +3,7 @@ import { ProcessTable } from "./ProcessosTable"
 import { Button } from "@/components/ui/button"
 import { Processos, columns } from "../columns"
 import { useState } from "react"
-import { fetchProcessos } from "@/actions/processo"
 import { ProcessCartorioTable } from "../../cartorio/components/ProcessosCartorioTable"
-import { fetchProcessosCartorio } from "@/actions/processoCartorio"
 import { ProcessosCartorio, columnsCartorio } from "../../cartorio/columns"
 
 interface ProcessosMenuProps {

@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache"
 import { createAtividade,updateAtividade,deleteAtividade } from "./atividade"
 import { createCartorio,updateCartorio,deleteCartorio } from "./cartorio"
 import { createSetor,updateSetor,deleteSetor} from "./setor"
+import { createTipo,updateTipo,deleteTipo } from "./tipos"
 
 
 
@@ -32,6 +33,15 @@ export const handleNewNome = async (tipo:string,nome:string) => {
         }
         return(setor)
     }
+    if(tipo === "Tipo"){
+        const tipo = await createTipo(nome)
+        if(tipo){
+            revalidatePath("/private/admin")
+            revalidatePath("/private/prefeitura/criar")
+            revalidatePath("/private/cartorio/criar")
+        }
+        return(tipo)
+    }
 }
 
 export const handleUpdateNome = async (tipo:string,nome:string,id:string) => {
@@ -57,6 +67,14 @@ export const handleUpdateNome = async (tipo:string,nome:string,id:string) => {
         }
         return(setor)
     }
+    if(tipo === "Tipo"){
+        const idTipo = parseInt(id)
+        const tipo = await updateTipo({idTipo,nome})
+        if(tipo){
+            revalidatePath("/private/admin")
+        }
+        return(tipo)
+    }
 }
 
 export const handleDeleteNome = async (tipo:string,id:string) => {
@@ -81,5 +99,13 @@ export const handleDeleteNome = async (tipo:string,id:string) => {
             revalidatePath("/private/admin")
         }
         return(setor)
+    }
+    if(tipo === "Tipo"){
+        const idTipo = parseInt(id)
+        const tipo = await deleteTipo(idTipo)
+        if(tipo){
+            revalidatePath("/private/admin")
+        }
+        return(tipo)
     }
 }

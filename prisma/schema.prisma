@@ -150,7 +150,7 @@ model ProcessoCartorio {
   setor          Setor          @relation(fields: [destino_id], references: [id])
   cartorio       Cartorio       @relation(fields: [fonte_id], references: [id])
   atividade      Atividade      @relation(fields: [atividade_id], references: [id])
-  TipoDeProcesso TipoDeProcesso @relation(fields: [tipo_id], references: [id])
+  tipo TipoDeProcesso @relation(fields: [tipo_id], references: [id])
 
   descricao_pessoas DescricaoPessoas[]
   descricao_lotes   DescricaoLotes[]

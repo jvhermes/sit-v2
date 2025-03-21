@@ -6,7 +6,8 @@ import prisma from "@/utils/db";
 
 const fechData = async () => {
 
-    const [atividades,cartorios,setores,user] = await Promise.all([
+    const [tipos,atividades,cartorios,setores,user] = await Promise.all([
+      prisma.tipoDeProcesso.findMany(),
       prisma.atividade.findMany(),
       prisma.cartorio.findMany(),
       prisma.setor.findMany(),
@@ -42,17 +43,17 @@ const fechData = async () => {
           tipo:item.perfil.toLowerCase()
         }
     })
-    return {atividades,cartorios,setores,usuarios}
+    return {tipos,atividades,cartorios,setores,usuarios}
   }
 
 export default async function AdminPage() {
 
-    const {atividades,cartorios,setores,usuarios} = await fechData()
+    const {tipos,atividades,cartorios,setores,usuarios} = await fechData()
     return (
         <>
             <Title name="Configurações" text="Editar detalhes do Sistema"></Title>
 
-            <AdminMenu atividades={atividades} setores={setores} usuarios={usuarios} cartorios={cartorios} />
+            <AdminMenu tipos={tipos} atividades={atividades} setores={setores} usuarios={usuarios} cartorios={cartorios} />
         </>
     )
 }

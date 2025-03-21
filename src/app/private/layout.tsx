@@ -20,7 +20,7 @@ export default function Layout({
     };
 
     return (
-        <div className="w-full h-full bg-gray-100 ">
+        <div className="w-full h-full ">
             <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
             <div className={`  transition-all   items-center flex-col flex duration-300 ${isSidebarOpen ? 'ml-[230px]' : 'ml-0'} `}>
                 <div className="  w-full flex justify-between  h-15 px-8 py-4">

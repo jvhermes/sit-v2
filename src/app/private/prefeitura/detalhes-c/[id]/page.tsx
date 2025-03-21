@@ -31,6 +31,7 @@ const fechData = async (idString: string) => {
       setor: true,
       descricao_lotes: true,
       descricao_pessoas: true,
+      tipo:true,
       lote: {
         include: {
           lote: true
@@ -42,9 +43,9 @@ const fechData = async (idString: string) => {
 
   return processo
 }
-export default async function page({ params, searchParams }: {
+export default async function page({ params }: {
   params: { id: string }
-  searchParams?: { retorno?: string }
+  
 }) {
 
   const processo = await fechData(params.id)
@@ -59,20 +60,20 @@ export default async function page({ params, searchParams }: {
       {processo && (
         <div className='w-10/12 mt-10'>
           <div className='py-6'>
-            <Link href={searchParams?.retorno || "private/cartorio"}>
+            <Link href={"private/prefeitura"}>
               <Button variant={"secondary"}>Retornar</Button>
             </Link>
           </div>
           <section className='p-10 flex-col mb-5 border rounded flex  gap-4'>
           <h2 className='text-xl'>Processo {processo.num_processo}</h2>
             <div className='flex flex-wrap gap-3 my-2'>
-              <p className='py-2 pr-2'>Tipo: <strong>{processo.tipo.toLowerCase()}</strong></p>
+              <p className='py-2 pr-2'>Tipo: <strong>{processo.tipo.nome.toLowerCase()}</strong></p>
               <p className='p-2'>Criado em: <strong>{format(processo.criado_em, "dd/MM/yyy")}</strong></p>
               <p className='p-2'>Ano: <strong>{processo.ano}</strong></p>
               <p className='p-2'>Enviado por: <strong>{processo.setor.nome}</strong></p>
             </div>
 
-            {(processo.tipo !== "OUTRO") && (
+            {(processo.tipo.tipo !== "OUTRO") && (
               <div>
                 <p className=' my-3'>Descrições Recebidas:</p>
                 <Table className='border'>
@@ -97,7 +98,7 @@ export default async function page({ params, searchParams }: {
                 </Table>
               </div>
             )}
-            {(processo.tipo === "OUTRO") && (
+            {(processo.tipo.tipo === "OUTRO") && (
               <div>
                 <p className='text-xl my-3'>Pessoas Citadas:</p>
                 <Table className='border'>

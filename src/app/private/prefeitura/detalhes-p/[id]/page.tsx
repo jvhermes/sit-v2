@@ -46,9 +46,9 @@ const fechData = async (idString: string) => {
 
   return processo
 }
-export default async function page({ params, searchParams }: {
+export default async function page({ params }: {
   params: { id: string }
-  searchParams?: { retorno?: string }
+  
 }) {
 
   const processo = await fechData(params.id)
@@ -61,7 +61,7 @@ export default async function page({ params, searchParams }: {
       {processo && (
         <div className='w-10/12 mt-10'>
           <div className='py-6'>
-            <Link href={searchParams?.retorno || "private/prefeitura"}>
+            <Link href={"private/prefeitura"}>
               <Button variant={"outline"}>Retornar</Button>
             </Link>
           </div>

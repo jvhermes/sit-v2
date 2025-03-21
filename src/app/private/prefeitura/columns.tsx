@@ -1,9 +1,10 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, Eye,Trash2} from "lucide-react"
+import { ArrowUpDown, Eye, Trash2 } from "lucide-react"
+import Link from "next/link"
+
 export type Processos = {
     id: number
     numero: string,
@@ -19,6 +20,20 @@ export type Processos = {
 
 export const columns: ColumnDef<Processos>[] = [
 
+    {
+        accessorKey: "id",
+        header: "Ações",
+        cell: (props) => (
+
+            <div className="flex gap-2">
+                <Link href={`/private/prefeitura/detalhes-p/${props.getValue()}`}>
+                    <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-400"><Eye /></Button>
+                </Link>
+                <Button className="p-1 h-8 bg-red-500 hover:bg-red-400"><Trash2 /></Button>
+            </div>
+        ),
+
+    },
     {
         accessorKey: "numero",
         header: ({ column }) => {
@@ -85,15 +100,5 @@ export const columns: ColumnDef<Processos>[] = [
         }
 
     },
-    {
-        header: "Ações",
-        cell: ({ row }) => (
-           
-            <div className="flex gap-2">
-                <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-400"><Eye /></Button>
-                <Button className="p-1 h-8 bg-red-500 hover:bg-red-400"><Trash2 /></Button>
-            </div>
-        ),
 
-    },
 ]

@@ -66,17 +66,18 @@ export function ProcessTable<TData, TValue>({ columns, data, }: DataTableProps<T
     return (
         <div >
             <div className="py-3 flex justify-end">
-           
+
                 <Link href={"/private/prefeitura/criar"}>
                     <Button className="bg-green-800"  >Novo Processo</Button>
 
                 </Link>
             </div>
             <div className="bg-white p-5 border">
+                <div className="m-2">
+                    <p>Filtros:</p>
+                </div>
                 <div className="flex items-center flex-wrap gap-2  py-4">
-                    <div className="m-2">
-                        <p>Filtros:</p>
-                    </div>
+
                     <Input
                         placeholder="N° do Processo "
                         value={(table.getColumn("numero")?.getFilterValue() as string) ?? ""}

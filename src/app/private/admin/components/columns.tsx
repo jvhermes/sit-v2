@@ -8,12 +8,18 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
+import { Tipo } from "@prisma/client"
 
 type AdminTableType = {
     id: string,
     nome: string
 }
 
+type TipoTableType = {
+    id:string,
+    nome:string,
+    tipo:Tipo
+}
 
 export type UserTableType = {
     id: string,
@@ -49,7 +55,31 @@ export const adminColumns: ColumnDef<AdminTableType>[] = [
     }
 ]
 
-export const usuariosColumns: ColumnDef<AdminTableType>[] = [
+export const tipoColumns: ColumnDef<TipoTableType>[] = [
+    {
+        id: "select",
+        header: "Selecionar",
+        cell: ({ row }) => (
+            <Checkbox
+                checked={row.getIsSelected()}
+                onCheckedChange={(value) => row.toggleSelected(!!value)}
+                aria-label="Select row"
+
+            />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+
+
+    },
+    {
+        accessorKey: "nome",
+        header: "Nome",
+   
+    }
+]
+
+export const usuariosColumns: ColumnDef<UserTableType>[] = [
     {
         id: "select",
         header: "Selecionar",
