@@ -16,14 +16,12 @@ async function parseCSV(file: File): Promise<any[]> {
         Papa.parse(file, {
 
             complete: function (res) {
-                res.data.forEach((item: any) => {
-                    const fileLineSplit = item;
-                    lotesRes.push(fileLineSplit);
-                });
-
-                resolve(lotesRes);
+                resolve(res.data);
             },
+            quoteChar: "",
             skipEmptyLines: true,
+            delimiter:";",
+
             error: function (error) {
                 reject(error);
             },

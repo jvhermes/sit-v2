@@ -104,22 +104,22 @@ export const saveCSV = async (lotesRes: any[]) => {
                     matr = indexMatr
 
 
-                    for await (let line of lotesRes) {
+                    for await (let line of lotesParsed.slice(1)) {
 
-                        const line2 = line
+                      
 
                         lotes.push({
-                            codigo_imovel: line2[cod],
-                            insc_imob: line2[insc],
-                            proprietario: line2[prop],
-                            logradouro: line2[log],
-                            area_total: line2[area],
-                            quadra: line2[qua],
-                            lote: line2[lot],
-                            numero: line2[num],
-                            bairro: line2[bai],
-                            testada: line2[tes],
-                            matricula: line2[matr]
+                            codigo_imovel: line[cod].replace(/^"/, ''),
+                            insc_imob: line[insc],
+                            proprietario: line[prop],
+                            logradouro: line[log],
+                            area_total: line[area],
+                            quadra: line[qua],
+                            lote: line[lot],
+                            numero: line[num],
+                            bairro: line[bai],
+                            testada: line[tes],
+                            matricula: line[matr]
                         })
                     }
 
@@ -139,7 +139,7 @@ export const saveCSV = async (lotesRes: any[]) => {
 
             if (loteAlreadyExists) {
                 try {
-                    const lote2 = await prisma.lote.update({
+                    await prisma.lote.update({
                         where: { codigo_imovel: codigo_imovel },
                         data: {
                             codigo_imovel,
@@ -163,7 +163,7 @@ export const saveCSV = async (lotesRes: any[]) => {
 
             } else {
                 try {
-                    const lote2 = await prisma.lote.create({
+                    await prisma.lote.create({
                         data: {
                             codigo_imovel,
                             numero,
@@ -195,7 +195,7 @@ export const saveCSV = async (lotesRes: any[]) => {
 
     revalidatePath("/private/prefeitura/criar")
     revalidatePath("/private/cartorio/criar")
-    console.log(lotes)
+
     return lotes
 
 

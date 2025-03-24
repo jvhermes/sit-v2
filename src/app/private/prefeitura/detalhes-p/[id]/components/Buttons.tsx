@@ -3,7 +3,15 @@
 import { Button } from "@/components/ui/button"
 import { ProcessoPrefeitura, Status } from "@prisma/client"
 import { FaFilePdf } from "react-icons/fa";
-import { deleteProcesso, closeProcesso } from "@/actions/processo";
+import { deleteProcesso } from "@/actions/processo";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import { toast } from "sonner";
 import { useState } from "react";
 import { CloseProcessoForm } from "./CloseProcessoForm";
@@ -59,8 +67,22 @@ export function Buttons({ status, processo }: ButtonsProps) {
         )}
         {(status === "PENDENTE" || status === "ATRASADO") && (
           <div >
-            <Button className="my-3" onClick={() => deleteProcessoEvent()} variant={"destructive"}>Cancelar Envio</Button>
-
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant={"destructive"}>Cancelar Envio</Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Confirmar Exclusão</DialogTitle>
+                  <DialogDescription>
+                    <div className="flex flex-col">
+                    <p>As informações e documentos serão excluidos</p>
+                    <Button className="my-3 w-1/2 mx-auto" onClick={() => deleteProcessoEvent()} variant={"destructive"}>Cancelar Envio</Button>
+                    </div>
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
+            </Dialog>
           </div>
         )}
 

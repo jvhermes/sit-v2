@@ -3,7 +3,19 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, Eye, Trash2 } from "lucide-react"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
 import Link from "next/link"
+import { toast } from "sonner";
+
+import { deleteProcesso } from "@/actions/processo";
+
 
 export type Processos = {
     id: number
@@ -18,6 +30,25 @@ export type Processos = {
     status: string
 }
 
+async function deleteProcessoEvent(id:number | unknown) {
+
+    const res = await deleteProcesso(id)
+    if (!res) {
+      toast.error("Erro ao excluir Processo", {
+        duration: 3000,
+        classNames: {
+          toast: "text-base"
+        }
+      })
+    } else {
+      toast.success("Processo excluido com sucesso", {
+        duration: 3000,
+        classNames: {
+          toast: "text-base"
+        }
+      })
+    }
+}
 export const columns: ColumnDef<Processos>[] = [
 
     {
@@ -27,9 +58,26 @@ export const columns: ColumnDef<Processos>[] = [
 
             <div className="flex gap-2">
                 <Link href={`/private/prefeitura/detalhes-p/${props.getValue()}`}>
-                    <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-400"><Eye /></Button>
+                    <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-500/90"><Eye /></Button>
                 </Link>
-                <Button className="p-1 h-8 bg-red-500 hover:bg-red-400"><Trash2 /></Button>
+                <div >
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="p-1 h-8" variant={"destructive"}><Trash2 /></Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Confirmar Exclusão</DialogTitle>
+                                <DialogDescription>
+                                    <div className="flex flex-col">
+                                        <p>As informações e documentos serão excluidos</p>
+                                        <Button className="my-3 w-1/2 mx-auto" onClick={() => deleteProcessoEvent(props.getValue())} variant={"destructive"}>Cancelar Envio</Button>
+                                    </div>
+                                </DialogDescription>
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
+                </div>
             </div>
         ),
 

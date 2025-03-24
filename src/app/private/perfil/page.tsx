@@ -68,15 +68,15 @@ export default async function Usuario() {
 
            <ModalSenha id={user.id} />
           </div>
-          <div className="border rounded flex-wrap py-10 flex justify-center sm:justify-start sm:pl-10 items-center gap-10">
+          <div className="border bg-white rounded flex-wrap py-10 flex justify-center sm:justify-start sm:pl-10 items-center gap-10">
             < Avatar className="w-[170px] h-[170px] " >
               <AvatarImage src={`/avatar${user.avatar}.png`} alt="avatar" />
               <AvatarFallback>AV</AvatarFallback>
             </Avatar >
             <div>
               <p>Nome:<strong>  {user.nome} </strong></p>
-              {(user.perfil === "PREFEITURA" && user.setor) && <p>Trabalha em:<strong> {user.setor.nome} </strong></p>}
-              {(user.perfil === "CARTORIO" && user.cartorio) && <p>Trabalha em: <strong>{user.cartorio.nome} </strong></p>}
+              {(user.perfil === "PREFEITURA" && user.setor) && <p>Vinculado à:<strong> {user.setor.nome} </strong></p>}
+              {(user.perfil === "CARTORIO" && user.cartorio) && <p>Vinculado à: <strong>{user.cartorio.nome} </strong></p>}
               {(user.perfil === "ADMIN") && <p>Perfil: <strong>Administrador </strong></p>}
               <p>Email: <strong>  {user.email} </strong></p>
               <p></p>

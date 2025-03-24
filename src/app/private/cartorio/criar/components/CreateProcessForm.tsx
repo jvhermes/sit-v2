@@ -65,12 +65,12 @@ import { createProcessoCartorio } from "@/actions/processoCartorio";
 type CreateProcessProps = {
     atividades: Atividade[]
     setores: Setor[]
-   
+
     lotes: Lote[]
 }
 
 
-export function CreateProcessForm({ atividades, setores, lotes}: CreateProcessProps) {
+export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessProps) {
 
     const [bairro, setBairro] = useState("")
     const [quadra, setQuadra] = useState("")
@@ -237,11 +237,11 @@ export function CreateProcessForm({ atividades, setores, lotes}: CreateProcessPr
 
     const handleSubmit = async (values: z.infer<typeof CreateProcessCartorioSquema>) => {
 
-        
+
         const lote_ids = values.tipo === "DESMEMBRAMENTO" ? loteInfos : selected
 
-        const res = await createProcessoCartorio(values,lote_ids)
-        
+        const res = await createProcessoCartorio(values, lote_ids)
+
         if (!res) {
             toast.error("Erro nos campos ou Número de Processo já utilizado", {
                 duration: 3000,
@@ -266,12 +266,12 @@ export function CreateProcessForm({ atividades, setores, lotes}: CreateProcessPr
 
             <div className="py-6 ">
                 <Link href={"/private/cartorio"}>
-                    <Button variant={"secondary"}>Retornar</Button>
+                    <Button variant={"outline"} className="bg-white hover:bg-gray-50">Retornar</Button>
                 </Link>
 
             </div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="p-10 rounded flex-col mb-5 border flex  gap-6 " >
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="p-10 rounded bg-white flex-col mb-5 border flex  gap-6 " >
                     <h2 className="text-lg">Dados:</h2>
                     <div className="flex gap-6 flex-wrap py-5 ">
                         <FormField name="num_processo" control={form.control} render={({ field }) => (
@@ -297,7 +297,7 @@ export function CreateProcessForm({ atividades, setores, lotes}: CreateProcessPr
                         )
                         }>
                         </FormField>
-                        
+
                         <FormField name="atividade" control={form.control} render={({ field }) => (
                             <FormItem >
                                 <FormLabel>Atividade</FormLabel>
@@ -431,51 +431,51 @@ export function CreateProcessForm({ atividades, setores, lotes}: CreateProcessPr
                         {tipoState === "DESMEMBRAMENTO" && (
                             <div>
                                 <div className="mb-4">
-                                <Select value={lote_id} onValueChange={setLote_id} >
-                                    <SelectTrigger >
-                                        <SelectValue placeholder="Lotes" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectGroup>
+                                    <Select value={lote_id} onValueChange={setLote_id} >
+                                        <SelectTrigger >
+                                            <SelectValue placeholder="Lotes" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectGroup>
 
-                                            <Button
-                                                className="w-full h-[25px] px-2"
-                                                variant="secondary"
-                                                size="sm"
-                                                onClick={(e) => {
-                                                    e.stopPropagation()
-                                                    setLote_id("")
-                                                }}
-                                                type="button"
-                                            >
-                                                Limpar
-                                            </Button>
+                                                <Button
+                                                    className="w-full h-[25px] px-2"
+                                                    variant="secondary"
+                                                    size="sm"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation()
+                                                        setLote_id("")
+                                                    }}
+                                                    type="button"
+                                                >
+                                                    Limpar
+                                                </Button>
 
-                                            {filtredLotes.map((item) => {
-                                                if (item.insc_imob === insc_imob && insc_imob !== "") {
-                                                    return (
-                                                        <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
-                                                    )
-                                                }
-                                                if (item.codigo_imovel === codigo && codigo !== "") {
-                                                    return (
-                                                        <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
-                                                    )
-                                                }
-                                                if (item.quadra === quadra && item.bairro === bairro && insc_imob === "" && codigo === "") {
-                                                    return (
-                                                        <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
-                                                    )
-                                                }
+                                                {filtredLotes.map((item) => {
+                                                    if (item.insc_imob === insc_imob && insc_imob !== "") {
+                                                        return (
+                                                            <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
+                                                        )
+                                                    }
+                                                    if (item.codigo_imovel === codigo && codigo !== "") {
+                                                        return (
+                                                            <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
+                                                        )
+                                                    }
+                                                    if (item.quadra === quadra && item.bairro === bairro && insc_imob === "" && codigo === "") {
+                                                        return (
+                                                            <SelectItem value={item.id.toString()} key={item.id}>{item.lote}</SelectItem>
+                                                        )
+                                                    }
 
-                                            })}
-                                        </SelectGroup>
-                                    </SelectContent>
-                                </Select>
+                                                })}
+                                            </SelectGroup>
+                                        </SelectContent>
+                                    </Select>
                                 </div>
-                                {loteInfos.map((item,index) => {
+                                {loteInfos.map((item, index) => {
                                     return (
-                                        <div key={index}  className="my-2">
+                                        <div key={index} className="my-2">
                                             <Card>
                                                 <CardContent className="p-4">
                                                     <span className="px-3"> Lote:  {item.lote}</span>

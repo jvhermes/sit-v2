@@ -16,7 +16,7 @@ type AdminTableType = {
 }
 
 type TipoTableType = {
-    id:string,
+    id:number,
     nome:string,
     tipo:Tipo
 }

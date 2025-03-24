@@ -269,7 +269,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
 
             <div className="py-6 ">
                 <Link href={"/private/prefeitura"}>
-                    <Button variant={"outline"}>Retornar</Button>
+                    <Button variant={"outline"} className="bg-white hover:bg-gray-50">Retornar</Button>
                 </Link>
 
             </div>
@@ -309,7 +309,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                             <Button
                                                 variant={"outline"}
                                                 className={cn(
-                                                    "w-[270px] pl-3 text-left font-normal",
+                                                    "w-[270px] pl-3 text-left font-normal bg-white",
                                                     !field.value && "text-muted-foreground"
                                                 )}
                                                 type="button"

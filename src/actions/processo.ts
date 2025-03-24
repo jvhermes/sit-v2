@@ -4,12 +4,16 @@ import { format, toDate, isAfter } from "date-fns"
 import { auth } from "@/auth"
 import { Processos } from "@/app/private/prefeitura/columns"
 import { CreateProcessSquema, RespostaLoteSquema, RespostaPessoaSquema } from "@/schemas/process"
-import z from "zod"
+
 import { Lote, ProcessoPrefeitura } from "@prisma/client"
 import { revalidatePath } from "next/cache"
+import { z } from "zod"
 
-export const deleteProcesso = async (id: number) => {
+export const deleteProcesso = async (id: number | unknown) => {
 
+    if(typeof(id) !== "number"){
+        return
+    }
     try {
         await prisma.processoPrefeituraToLotee.deleteMany({
             where: {

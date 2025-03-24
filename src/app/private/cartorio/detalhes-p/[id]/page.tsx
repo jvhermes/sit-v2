@@ -84,7 +84,7 @@ export default async function page({ params}: {
       {processo && (
         <div className='w-10/12 mt-10'>
           <div className='py-6'>
-            <Link href={ "private/cartorio"}>
+            <Link href={ "/private/cartorio"}>
               <Button variant={"secondary"}>Retornar</Button>
             </Link>
           </div>

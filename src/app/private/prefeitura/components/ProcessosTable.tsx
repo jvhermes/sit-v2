@@ -68,7 +68,7 @@ export function ProcessTable<TData, TValue>({ columns, data, }: DataTableProps<T
             <div className="py-3 flex justify-end">
 
                 <Link href={"/private/prefeitura/criar"}>
-                    <Button className="bg-green-800"  >Novo Processo</Button>
+                    <Button  >Novo Processo</Button>
 
                 </Link>
             </div>
