@@ -51,37 +51,7 @@ async function deleteProcessoEvent(id: number | unknown) {
     }
 }
 export const columnsCartorio: ColumnDef<ProcessosCartorio>[] = [
-    {
-        accessorKey: "id",
-        header: "Ações",
-        cell: (props) => (
 
-            <div className="flex gap-2">
-                <Link href={`/private/prefeitura/detalhes-c/${props.getValue()}`}>
-                    <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-500/90"><Eye /></Button>
-                </Link>
-                <div >
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button className="p-1 h-8" variant={"destructive"}><Trash2 /></Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>Confirmar Exclusão</DialogTitle>
-                                <DialogDescription>
-                                    <div className="flex flex-col">
-                                        <p>As informações e documentos serão excluidos</p>
-                                        <Button className="my-3 w-1/2 mx-auto" onClick={() => deleteProcessoEvent(props.getValue())} variant={"destructive"}>Cancelar Envio</Button>
-                                    </div>
-                                </DialogDescription>
-                            </DialogHeader>
-                        </DialogContent>
-                    </Dialog>
-                </div>
-            </div>
-        ),
-
-    },
     {
         accessorKey: "numero",
         header: ({ column }) => {
@@ -123,7 +93,37 @@ export const columnsCartorio: ColumnDef<ProcessosCartorio>[] = [
         accessorKey: "criado",
         header: "Criado em",
     },
+    {
+        accessorKey: "id",
+        header: "Ações",
+        cell: (props) => (
 
+            <div className="flex gap-2">
+                <Link href={`/private/prefeitura/detalhes-c/${props.getValue()}`}>
+                    <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-500/90"><Eye /></Button>
+                </Link>
+                <div >
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button className="p-1 h-8" variant={"destructive"}><Trash2 /></Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>Confirmar Exclusão</DialogTitle>
+                                <DialogDescription>
+                                    <div className="flex flex-col">
+                                        <p>As informações e documentos serão excluidos</p>
+                                        <Button className="my-3 w-1/2 mx-auto" onClick={() => deleteProcessoEvent(props.getValue())} variant={"destructive"}>Cancelar Envio</Button>
+                                    </div>
+                                </DialogDescription>
+                            </DialogHeader>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </div>
+        ),
+
+    },
 
 
 ]
