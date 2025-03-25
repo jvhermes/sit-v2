@@ -30,7 +30,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                             <div>
 
                                 <Link href={"/private/admin"}>
-                                    <Button className="px-3 w-[130px] " variant={"ghost"} > Admin</Button>
+                                    <Button className="px-3  " variant={"ghost"} > Admin</Button>
                                 </Link>
                             </div>
                         )}
@@ -40,12 +40,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                         <div>
                             <div>
                                 <Link href={"/private/prefeitura"}>
-                                    <Button className="px-3 w-[130px] " variant={"ghost"} > Processos {session.data.user.perfil === "ADMIN" && <span> (Prefeitura)</span>}</Button>
+                                    <Button className="px-3 " variant={"ghost"} > Processos {session.data.user.perfil === "ADMIN" && <span> (Prefeitura)</span>}</Button>
                                 </Link>
                             </div>
-                            <div>
+                            <div className=" flex justify-center">
                                 <Link href={"/private/prefeitura/encerrados"}>
-                                    <Button className="px-3 w-[130px] " variant={"ghost"} > Encerrados</Button>
+                                    <Button className="px-3 " variant={"ghost"} > Encerrados</Button>
                                 </Link>
                             </div>
                         </div>
@@ -54,14 +54,14 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                     <Separator className="bg-gray-500" />
                     {session.data.user.perfil !== "PREFEITURA" && (
                         <div>
-                            <div>
+                            <div >
                                 <Link href={"/private/cartorio"}>
-                                    <Button className="px-3 w-[130px] " variant={"ghost"} > Processos {session.data.user.perfil === "ADMIN" && <span> (Cartorio)</span>}</Button>
+                                    <Button className="px-3 " variant={"ghost"} > Processos {session.data.user.perfil === "ADMIN" && <span> (Cartorio)</span>}</Button>
                                 </Link>
                             </div>
-                            <div>
+                            <div className=" flex justify-center">
                                 <Link href={"/private/cartorio/encerrados"}>
-                                    <Button className="px-3 w-[130px] " variant={"ghost"} > Encerrados</Button>
+                                    <Button className="px-3 " variant={"ghost"} > Encerrados</Button>
                                 </Link>
                             </div>
                         </div>

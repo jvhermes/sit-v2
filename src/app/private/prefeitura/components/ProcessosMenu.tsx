@@ -5,7 +5,9 @@ import { Processos, columns } from "../columns"
 import { useState } from "react"
 import { ProcessCartorioTable } from "../../cartorio/components/ProcessosCartorioTable"
 import { ProcessosCartorio, columnsCartorio } from "../../cartorio/columns"
-
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
+import Link from "next/link"
 interface ProcessosMenuProps {
     processos: Processos[],
     processosCart: ProcessosCartorio[]
@@ -18,44 +20,35 @@ export function ProcessosMenu({ processos, processosCart }: ProcessosMenuProps) 
     const processoList = processos
     const processoListCartorio = processosCart
 
-    const [processoState, setProcessoState] = useState<ProcessoState>("enviados")
-    const [enviados, setEnviados] = useState(true)
-    const [recebidos, setRecebidos] = useState(false)
 
-    async function changeButton(id: ProcessoState) {
-        if (id !== "enviados") setEnviados(false); else {
-            if (processoState !== "enviados") {
-                setEnviados(true)
-                setProcessoState("enviados")
-            }
-        }
-        if (id !== "recebidos") setRecebidos(false); else {
-            if (processoState !== "recebidos") {
-                setRecebidos(true)
-                setProcessoState("recebidos")
-            }
-        }
-
-    }
+    const [checked,setChecked] = useState(false)
 
 
     return (
-        <div className="w-11/12  mt-2">
+        <div className="w-11/12  mt-12">
 
-            <div className="flex flex-wrap  justify-center gap-5 mt-8">
-                <Button variant={enviados ? undefined : "secondary"} className="w-[150px]" onClick={() => changeButton("enviados")}>Enviados</Button>
-                <Button variant={recebidos ? undefined : "outline"} className="w-[150px]" onClick={() => changeButton("recebidos")} >Recebidos</Button>
+     
+            <div className="py-3 flex justify-between">
+                <div className="flex items-center space-x-2 ml-5">
+                    <Switch id="enviados"  onCheckedChange={() => setChecked(!checked)} />
+                    <Label htmlFor="enviados">Enviados</Label>
+                </div>
+                <Link href={"/private/prefeitura/criar"}>
+                    <Button  >Novo Processo</Button>
+
+                </Link>
 
             </div>
-            <div className="my-6">
-            {(enviados) && (
 
-                <ProcessTable data={processoList} columns={columns} />
+            <div className="my-3">
+                {checked && (
 
-            )}
-            {recebidos && (
-                <ProcessCartorioTable data={processoListCartorio} columns={columnsCartorio} />
-            )}
+                    <ProcessTable data={processoList} columns={columns} />
+
+                )}
+                {!checked && (
+                    <ProcessCartorioTable data={processoListCartorio} columns={columnsCartorio} />
+                )}
             </div>
 
 

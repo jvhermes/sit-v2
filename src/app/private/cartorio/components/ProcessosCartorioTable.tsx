@@ -65,25 +65,7 @@ export function ProcessCartorioTable<TData, TValue>({ columns, data, }: DataTabl
 
     return (
         <div >
-            <div className="py-3 flex justify-between">
-                {(table.getRowCount() > 1) &&
-                    (<Link className={`${!table.getIsSomeRowsSelected() ? 'pointer-events-none' : ''}`} href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
-                        <Button disabled={!table.getIsSomeRowsSelected()} variant={"outline"}>Visualizar</Button>
-                    </Link>
-                    )
-                }
-                {(table.getRowCount() <= 1) &&
-                    ((<Link className={`${!table.getIsAllRowsSelected() ? 'pointer-events-none' : ''}`} href={{ pathname: `${newPathname}/detalhes-c/${table.getSelectedRowModel().rows?.[0]?.id}`, query: { retorno: pathname } }}>
-                        <Button disabled={!table.getIsAllRowsSelected()} variant={"outline"}>Visualizar</Button>
-                    </Link>
-
-                    ))
-                }
-                <Link href={"/private/cartorio/criar"}>
-                    <Button variant={"outline"}  >Novo Processo</Button>
-
-                </Link>
-            </div>
+       
             <div className="bg-white p-5 border">
                 <div className="flex items-center flex-wrap gap-2  py-4">
                     <div className="m-2">

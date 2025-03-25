@@ -55,8 +55,8 @@ export const saveCSV = async (lotesRes: any[]) => {
                 item.trim().toLowerCase().includes('bairrocorrespondente') ||
                 item.trim().toLowerCase().includes('nome_bairro')
             );
-            const indexQuadra = line2.findIndex(item => item.trim().toLowerCase().includes('quadra'));
-            const indexLote = line2.findIndex(item => item.trim().toLowerCase().includes('lote'));
+            const indexQuadra = line2.findIndex(item => item.trim().toLowerCase() === 'quadra');
+            const indexLote = line2.findIndex(item => item.trim().toLowerCase() === 'lote');
             const indexInsc = line2.findIndex(item =>
                 item.trim().toLowerCase().includes('inscricaoimobiliaria') ||
                 item.trim().toLowerCase().includes('inscimobiliaria') ||

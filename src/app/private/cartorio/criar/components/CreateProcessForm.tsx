@@ -4,10 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { z } from "zod"
-import { Calendar } from "@/components/ui/calendar"
-import { format, add } from "date-fns"
-import { CalendarIcon, Dice1 } from "lucide-react"
-import { cn } from "@/lib/utils"
 import { Textarea } from "@/components/ui/textarea"
 import {
     Select,
@@ -17,11 +13,7 @@ import {
     SelectValue,
     SelectGroup,
 } from "@/components/ui/select"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
+
 import {
     Form,
     FormControl,
@@ -46,7 +38,7 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { useState, useRef, useCallback, ChangeEvent } from "react";
 import { CreateProcessCartorioSquema } from "@/schemas/processCartorio";
-import { Atividade, Cartorio, Lote, Setor, TipoDeProcesso } from "@prisma/client";
+import { Atividade, Lote, Setor, TipoDeProcesso } from "@prisma/client";
 import Link from "next/link";
 import { toast } from "sonner"
 import {
@@ -65,12 +57,12 @@ import { createProcessoCartorio } from "@/actions/processoCartorio";
 type CreateProcessProps = {
     atividades: Atividade[]
     setores: Setor[]
-
+    tipos: TipoDeProcesso[]
     lotes: Lote[]
 }
 
 
-export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessProps) {
+export function CreateProcessForm({ atividades, setores, lotes, tipos }: CreateProcessProps) {
 
     const [bairro, setBairro] = useState("")
     const [quadra, setQuadra] = useState("")
@@ -181,7 +173,7 @@ export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessP
             num_processo: "",
             ano: new Date().getFullYear().toString(),
             texto: "",
-            tipo: "DESMEMBRAMENTO",
+            tipo:'1',
             descricao_lotes: [{ lote: "", area: "", testada: "" }],
             descricao_pessoas: [{ nome: "", cpf: "", email: "", telefone: "" }]
         }
@@ -238,7 +230,7 @@ export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessP
     const handleSubmit = async (values: z.infer<typeof CreateProcessCartorioSquema>) => {
 
 
-        const lote_ids = values.tipo === "DESMEMBRAMENTO" ? loteInfos : selected
+        const lote_ids = values.tipo === '1' ? loteInfos : selected
 
         const res = await createProcessoCartorio(values, lote_ids)
 
@@ -324,16 +316,18 @@ export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessP
                         <FormField name="tipo" control={form.control} render={({ field }) => (
                             <FormItem >
                                 <FormLabel>Tipo de Processo</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select onValueChange={field.onChange} defaultValue={field.value.toLocaleString()}>
                                     <FormControl>
                                         <SelectTrigger className="w-[270px]">
                                             <SelectValue />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        <SelectItem value="DESMEMBRAMENTO">Desmembramento</SelectItem>
-                                        <SelectItem value="REMEMBRAMENTO">Remembramento</SelectItem>
-                                        <SelectItem value="OUTRO">Outro</SelectItem>
+                                        {tipos.map((item) => {
+                                            return (
+                                                <SelectItem key={item.id} value={item.id.toLocaleString()}>{item.nome}</SelectItem>
+                                            )
+                                        })}
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
@@ -428,7 +422,7 @@ export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessP
 
                     </div>
                     <div>
-                        {tipoState === "DESMEMBRAMENTO" && (
+                        {tipoState === '1' && (
                             <div>
                                 <div className="mb-4">
                                     <Select value={lote_id} onValueChange={setLote_id} >
@@ -582,7 +576,7 @@ export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessP
                             )}
                     </div>
 
-                    {tipoState === "REMEMBRAMENTO" && (
+                    {tipoState === '2' && (
                         <> <h2 className="text-lg">Novas Descrições:</h2>
                             <div>
                                 <Table className="border">
@@ -644,7 +638,7 @@ export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessP
                             </div>
                         </>
                     )}
-                    {tipoState === "DESMEMBRAMENTO" && (
+                    {tipoState === '1' && (
                         <> <h2 className="text-lg">Novas Descrições:</h2>
                             <div className="flex py-1 gap-3 items-center">
                                 Adicionar Campos:
@@ -717,7 +711,7 @@ export function CreateProcessForm({ atividades, setores, lotes }: CreateProcessP
                             </div>
                         </>
                     )}
-                    {tipoState === "OUTRO" && (
+                    {(tipoState !== '2' && tipoState !== '1') && (
                         <> <h2 className="text-lg">Novas Descrições:</h2>
                             <div className="flex py-1 gap-3 items-center">
                                 Adicionar Campos:

@@ -3,14 +3,16 @@ import { revalidatePath } from "next/cache"
 import prisma from "@/utils/db"
 import { format } from "date-fns"
 import { ProcessosCartorio } from "@/app/private/cartorio/columns"
-type ProcessoState = "recebidos" | "enviados" | "finalizados"
+
 import { Lote } from "@prisma/client"
 import { CreateProcessCartorioSquema } from "@/schemas/processCartorio"
 import { auth } from "@/auth"
 import z from "zod"
 
-export const deleteProcessoCartorio = async (id: number) => {
-
+export const deleteProcessoCartorio = async (id: number | unknown) => {
+    if(typeof(id) !== "number"){
+        return
+    }
     try {
         await prisma.processoCartorioToLotee.deleteMany({
             where: {
@@ -75,6 +77,7 @@ export const fetchProcessosCartorio = async (ativo: boolean): Promise<ProcessosC
                         lote: true
                     }
                 },
+                tipo:true
             }
 
         })
@@ -83,7 +86,7 @@ export const fetchProcessosCartorio = async (ativo: boolean): Promise<ProcessosC
             return {
                 id: item.id,
                 numero: item.num_processo.toString(),
-                tipo: item.tipo.toLowerCase(),
+                tipo: item.tipo.tipo.toLowerCase(),
                 proprietario: item.lote[0].lote.proprietario || "",
                 bairro: item.lote[0].lote.bairro || "",
                 quadra: item.lote[0].lote.quadra || "",
@@ -106,6 +109,7 @@ export const fetchProcessosCartorio = async (ativo: boolean): Promise<ProcessosC
                         lote: true
                     }
                 },
+                tipo:true
             }
 
         })
@@ -114,7 +118,7 @@ export const fetchProcessosCartorio = async (ativo: boolean): Promise<ProcessosC
             return {
                 id: item.id,
                 numero: item.num_processo.toString(),
-                tipo: item.tipo.toLowerCase(),
+                tipo: item.tipo.tipo.toLowerCase(),
                 proprietario: item.lote[0].lote.proprietario || "",
                 bairro: item.lote[0].lote.bairro || "",
                 quadra: item.lote[0].lote.quadra || "",
@@ -136,6 +140,7 @@ export const fetchProcessosCartorio = async (ativo: boolean): Promise<ProcessosC
                         lote: true
                     }
                 },
+                tipo:true
             }
 
         })
@@ -144,7 +149,7 @@ export const fetchProcessosCartorio = async (ativo: boolean): Promise<ProcessosC
             return {
                 id: item.id,
                 numero: item.num_processo.toString(),
-                tipo: item.tipo.toLowerCase(),
+                tipo: item.tipo.tipo.toLowerCase(),
                 proprietario: item.lote[0].lote.proprietario || "",
                 bairro: item.lote[0].lote.bairro || "",
                 quadra: item.lote[0].lote.quadra || "",
@@ -188,7 +193,7 @@ export const createProcessoCartorio = async (values: z.infer<typeof CreateProces
 
             ano,
             observacao: texto,
-            tipo,
+            tipo_id:parseInt(tipo),
             atividade_id: atividade,
             destino_id: setor,
             fonte_id: session.user.cartorio_id
@@ -238,10 +243,11 @@ export const createProcessoCartorio = async (values: z.infer<typeof CreateProces
 
 export const fechDataCartorio = async () => {
 
-    const [atividades, setores, lotes] = await Promise.all([
+    const [atividades, setores, lotes,tipos] = await Promise.all([
         prisma.atividade.findMany(),
         prisma.setor.findMany(),
-        prisma.lote.findMany()
+        prisma.lote.findMany(),
+        prisma.tipoDeProcesso.findMany()
     ])
-    return { atividades, setores, lotes }
+    return { atividades, setores, lotes,tipos }
 }

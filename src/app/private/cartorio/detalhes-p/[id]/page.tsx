@@ -85,10 +85,10 @@ export default async function page({ params}: {
         <div className='w-10/12 mt-10'>
           <div className='py-6'>
             <Link href={ "/private/cartorio"}>
-              <Button variant={"secondary"}>Retornar</Button>
+              <Button variant={"outline"}>Retornar</Button>
             </Link>
           </div>
-          <section className='p-10 flex-col mb-5 border rounded flex  gap-4'>
+          <section className='p-10 flex-col mb-5 border bg-white rounded flex  gap-4'>
 
             <h2 className='text-xl'>Processo {processo.num_processo}</h2>
             <div className='flex flex-wrap gap-3 my-2'>

@@ -13,8 +13,8 @@ export const CreateProcessCartorioSquema = z.object({
     setor : z.string({
         required_error:"Campo Obrigatório"
     }),
-    tipo: z.nativeEnum(Tipo,{
-        required_error:"Campo Obrigatório"
+    tipo: z.string( {
+        required_error: "Campo Obrigatório"
     }),
     ano :z.string().min(2,{message:"Campo Obrigatório"}),
     pdf :z

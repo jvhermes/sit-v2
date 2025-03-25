@@ -61,10 +61,10 @@ export default async function page({ params }: {
         <div className='w-10/12 mt-10'>
           <div className='py-6'>
             <Link href={"/private/prefeitura"}>
-              <Button variant={"secondary"}>Retornar</Button>
+              <Button variant={"outline"}>Retornar</Button>
             </Link>
           </div>
-          <section className='p-10 flex-col mb-5 border rounded flex  gap-4'>
+          <section className='p-10 bg-white flex-col mb-5 border rounded flex  gap-4'>
           <h2 className='text-xl'>Processo {processo.num_processo}</h2>
             <div className='flex flex-wrap gap-3 my-2'>
               <p className='py-2 pr-2'>Tipo: <strong>{processo.tipo.nome.toLowerCase()}</strong></p>

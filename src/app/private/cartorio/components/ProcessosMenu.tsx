@@ -3,11 +3,11 @@ import { ProcessTable } from "@/app/private/prefeitura/components/ProcessosTable
 import { Button } from "@/components/ui/button"
 import { Processos, columns } from "@/app/private/prefeitura/columns"
 import { useState } from "react"
-import { fetchProcessos } from "@/actions/processo"
 import { ProcessCartorioTable } from "../../cartorio/components/ProcessosCartorioTable"
-import { fetchProcessosCartorio } from "@/actions/processoCartorio"
-
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 import { columnsCartorio, ProcessosCartorio } from "../../cartorio/columns"
+import Link from "next/link"
 interface ProcessosMenuProps {
     processos: ProcessosCartorio[],
     processosPref: Processos[]
@@ -19,44 +19,32 @@ export function ProcessosMenu({ processos, processosPref }: ProcessosMenuProps) 
 
     const processoList = processos
     const processoListPrefeitura = processosPref
-    const [processoState, setProcessoState] = useState<ProcessoState>("recebidos")
+    const [checked,setChecked] = useState(false)
 
-    const [enviados, setEnviados] = useState(false)
-    const [recebidos, setRecebidos] = useState(true)
-
-    async function changeButton(id: ProcessoState) {
-        if (id !== "enviados") setEnviados(false); else {
-            if (processoState !== "enviados") {
-
-                setEnviados(true)
-                setProcessoState("enviados")
-            }
-        }
-        if (id !== "recebidos") setRecebidos(false); else {
-            if (processoState !== "recebidos") {
-                setRecebidos(true)
-                setProcessoState("recebidos")
-            }
-        }
-
-    }
 
 
     return (
-        <div className="w-11/12  mt-2">
+        <div className="w-11/12  mt-12">
 
-            <div className="flex flex-wrap  justify-center gap-5 py-2">
-                <Button variant={recebidos ? undefined : "secondary"} className="w-[150px]" onClick={() => changeButton("recebidos")} >Recebidos</Button>
-                <Button variant={enviados ? undefined : "secondary"} className="w-[150px]" onClick={() => changeButton("enviados")}>Enviados</Button>
+    
+            <div className="py-3 flex justify-between">
+                <div className="flex items-center space-x-2 ml-5">
+                    <Switch id="enviados" onCheckedChange={() => setChecked(!checked)} />
+                    <Label htmlFor="enviados">Enviados</Label>
+                 
+                </div>
+                <Link href={"/private/cartorio/criar"}>
+                    <Button>Novo Processo</Button>
 
+                </Link>
             </div>
 
-            {(enviados) && (
+            {(checked) && (
                 <div>
                     <ProcessCartorioTable data={processoList} columns={columnsCartorio} />
                 </div>
             )}
-            {recebidos && (
+            {!checked && (
                 <ProcessTable data={processoListPrefeitura} columns={columns} />
             )}
         </div>
