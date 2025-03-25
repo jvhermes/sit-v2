@@ -1,9 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ProcessoPrefeitura, Status } from "@prisma/client"
-import { deleteProcesso, closeProcesso } from "@/actions/processo";
-import { toast } from "sonner";
+import { ProcessoPrefeitura, Status, TipoDeProcesso } from "@prisma/client"
 import { RespostaLoteForm } from './RespostaLoteForm'
 import { DescricaoAprovacao } from "../page"
 import { useState } from "react";
@@ -14,9 +12,10 @@ interface ButtonsProps {
 
   status: Status,
   processo: ProcessoPrefeitura,
-  descricaoRespostaList: DescricaoAprovacao[]
+  descricaoRespostaList: DescricaoAprovacao[],
+  tipo:TipoDeProcesso | undefined
 }
-export function Buttons({ status, processo, descricaoRespostaList }: ButtonsProps) {
+export function Buttons({ status, processo,tipo, descricaoRespostaList }: ButtonsProps) {
 
   const [respostaOpen, setRespostaOpen] = useState(false)
   async function openRespostaEvent() {
@@ -42,12 +41,12 @@ export function Buttons({ status, processo, descricaoRespostaList }: ButtonsProp
 
         </div>
       )}
-      {(processo.tipo !== "OUTRO" && respostaOpen) && (
+      {(tipo?.tipo !== "OUTRO" && respostaOpen) && (
         <div className='my-3'>
           <RespostaLoteForm processo={processo} descricaoRespostaList={descricaoRespostaList}></RespostaLoteForm>
         </div>
       )}
-      {(processo.tipo === "OUTRO" && respostaOpen) && (
+      {(tipo?.tipo === "OUTRO" && respostaOpen) && (
         <div className='my-3'>
           <RespostaPessoaForm processo={processo}></RespostaPessoaForm>
         </div>

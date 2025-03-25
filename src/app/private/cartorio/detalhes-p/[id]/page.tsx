@@ -65,7 +65,7 @@ export default async function page({ params}: {
 
   const processo = await fechData(params.id)
   const descricaoRespostaList: DescricaoAprovacao[] = []
-
+  const tipo = processo?.tipo
   processo?.descricao_lotes.map((item) => (
     descricaoRespostaList.push({
       lote: item.lote,
@@ -279,7 +279,7 @@ export default async function page({ params}: {
                     </div>
               </div>
             )}
-            <Buttons status={processo.status} processo={processo} descricaoRespostaList={descricaoRespostaList} />
+            <Buttons status={processo.status} processo={processo} tipo={tipo} descricaoRespostaList={descricaoRespostaList} />
           </section>
 
         </div>
