@@ -1,12 +1,12 @@
+
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React from 'react'
 import prisma from '@/utils/db'
 import { Title } from '@/components/Title'
 import { format } from 'date-fns'
-import { Buttons } from './components/Buttons'
+
 import { Card, CardContent } from '@/components/ui/card'
-import { Separator } from "@/components/ui/separator"
 import {
   Table,
   TableBody,
@@ -17,10 +17,13 @@ import {
 } from "@/components/ui/table"
 import { Textarea } from '@/components/ui/textarea'
 
+import { Buttons } from './components/Buttons'
+
+
 const fechData = async (idString: string) => {
 
   const id = parseInt(idString)
-  const processo = prisma.processoPrefeitura.findFirst({
+  const processo = prisma.processoCartorio.findFirst({
     where: {
       id
     }, include: {
@@ -29,12 +32,6 @@ const fechData = async (idString: string) => {
       descricao_lotes: true,
       descricao_pessoas: true,
       tipo:true,
-      resposta: {
-        include: {
-          descricao: true
-        }
-      },
-      respostaPessoa: true,
       lote: {
         include: {
           lote: true
@@ -53,6 +50,8 @@ export default async function page({ params }: {
 
   const processo = await fechData(params.id)
 
+
+
   return (
     <>
 
@@ -61,23 +60,22 @@ export default async function page({ params }: {
       {processo && (
         <div className='w-10/12 mt-10'>
           <div className='py-6'>
-            <Link href={"private/prefeitura"}>
+            <Link href={"/private/prefeitura"}>
               <Button variant={"outline"}>Retornar</Button>
             </Link>
           </div>
-          <section className='p-10 flex-col mb-5 border rounded bg-white flex  gap-4'>
-            <h2 className='text-xl'>Processo {processo.num_processo}</h2>
+          <section className='p-10 bg-white flex-col mb-5 border rounded flex  gap-4'>
+          <h2 className='text-xl'>Processo {processo.num_processo}</h2>
             <div className='flex flex-wrap gap-3 my-2'>
               <p className='py-2 pr-2'>Tipo: <strong>{processo.tipo.nome.toLowerCase()}</strong></p>
               <p className='p-2'>Criado em: <strong>{format(processo.criado_em, "dd/MM/yyy")}</strong></p>
-              <p className='p-2'>Expira em: <strong>{format(processo.prazo, "dd/MM/yyy")}</strong></p>
               <p className='p-2'>Ano: <strong>{processo.ano}</strong></p>
               <p className='p-2'>Enviado por: <strong>{processo.setor.nome}</strong></p>
             </div>
 
             {(processo.tipo.tipo !== "OUTRO") && (
               <div>
-                <p className=' my-3'>Descrições Enviadas:</p>
+                <p className=' my-3'>Descrições Recebidas:</p>
                 <Table className='border'>
                   <TableHeader>
                     <TableRow>
@@ -142,7 +140,7 @@ export default async function page({ params }: {
                           <p>Proprietário: <strong>{item.lote.proprietario}</strong></p>
                           <p>Bairro: <strong>{item.lote.bairro}</strong></p>
                           <p>Quadra: <strong>{item.lote.quadra}</strong></p>
-
+                        
                           <p>Número: <strong>{item.lote.numero}</strong></p>
                           <p>Logradouro: <strong>{item.lote.logradouro}</strong></p>
                           <p>Área: <strong>{item.lote.area_total}</strong></p>
@@ -158,104 +156,17 @@ export default async function page({ params }: {
 
             </div>
             <div>
-              <p className='py-2'>Obvservações Enviadas:</p>
+              <p className='py-2'>Obvservações:</p>
               <Textarea
-                value={processo.texto}
+                value={processo.observacao}
                 className="resize-none h-[120px] w-full"
                 readOnly={true}
               />
             </div>
-            <Separator className="bg-gray-300 my-3" />
-            {(processo.status === "RESPONDIDO" || processo.status === "RESPONDIDO_COM_ATRASO") && (
-              <div>
-                <p className='py-3'>Resposta:</p>
-                {processo.resposta && (
-                  <div>
-                    <div className='my-3'>
-                      <p className='my-3'>Descrições Recebidas:</p>
-                      <Table className='border'>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Novo Lote</TableHead>
-                            <TableHead>Matrícula</TableHead>
-                            <TableHead>Data de Registro</TableHead>
-                            <TableHead>Transcrição</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {processo.resposta.descricao.map((item, index) => {
-                            return (
-                              <TableRow key={index}>
-                                <TableCell>{item.lote}</TableCell>
-                                <TableCell>{item.matricula}</TableCell>
-                                <TableCell>{item.data_registro}</TableCell>
-                                <TableCell>{item.transcricao}</TableCell>
-                              </TableRow>
-                            )
-                          })}
-                        </TableBody>
-                      </Table>
-                    </div>
-                    <div className='my-3'>
-                      {(processo.status === "RESPONDIDO_COM_ATRASO" && processo.resposta.alvara) &&
-                        (
-                          <div className='my-3'>
-                            <p className='py-2'>Alvará de permissão devido a atraso:</p>
-                            <Textarea
-                              value={processo.resposta.alvara}
-                              className="resize-none  h-[30px] w-full"
-                              readOnly={true}
-                            />
-                          </div>
-                        )}
-                      <p className='py-2'>Obvservações Recebidas:</p>
-                      <Textarea
-                        value={processo.resposta.observacao}
-                        className="resize-none  h-[120px] w-full"
-                        readOnly={true}
-                      />
-                    </div>
-                  </div>
-                )}
-                {processo.respostaPessoa && (
-                  <div>
-                    {(processo.status === "RESPONDIDO_COM_ATRASO" && processo.respostaPessoa.alvara) &&
-                      (
-                        <div className='my-3'>
-                          <p className='py-2'>Alvará de permissão devido a atraso:</p>
-                          <Textarea
-                            value={processo.respostaPessoa.alvara}
-                            className="resize-none  h-[30px] w-full"
-                            readOnly={true}
-                          />
-                        </div>
-                      )}
-                    <div className='my-3'>
-                      <p className='py-2'>Obvservações Recebidas:</p>
-                      <Textarea
-                        value={processo.respostaPessoa.observacao}
-                        className="resize-none  h-[120px] w-full"
-                        readOnly={true}
-                      />
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-            {!processo.ativo && (
-              <div>
-                <Separator className="bg-gray-300 my-3" />
-                <div className='my-3'>
-                  <p className='py-2'>Conclusão:</p>
-                  <Textarea
-                    value={processo.conclusao}
-                    className="resize-none  h-[120px] w-full"
-                    readOnly={true}
-                  />
-                </div>
-              </div>
-            )}
-            <Buttons status={processo.status} processo={processo} />
+            <div className='m-auto'>
+              <Buttons processo={processo} />
+            </div>
+
           </section>
 
         </div>
