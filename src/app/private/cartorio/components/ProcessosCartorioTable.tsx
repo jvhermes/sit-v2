@@ -65,12 +65,13 @@ export function ProcessCartorioTable<TData, TValue>({ columns, data, }: DataTabl
 
     return (
         <div >
-       
+
             <div className="bg-white p-5 border">
+
+                <div className="m-2">
+                    <p>Filtros:</p>
+                </div>
                 <div className="flex items-center flex-wrap gap-2  py-4">
-                    <div className="m-2">
-                        <p>Filtros:</p>
-                    </div>
                     <Input
                         placeholder="N° do Processo "
                         value={(table.getColumn("numero")?.getFilterValue() as string) ?? ""}

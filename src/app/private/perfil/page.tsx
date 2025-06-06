@@ -68,7 +68,7 @@ export default async function Usuario() {
 
            <ModalSenha id={user.id} />
           </div>
-          <div className="border bg-white rounded flex-wrap py-10 flex justify-center sm:justify-start sm:pl-10 items-center gap-10">
+          <div className="border bg-whitetipo rounded flex-wrap py-10 flex justify-center sm:justify-start sm:pl-10 items-center gap-10">
             < Avatar className="w-[170px] h-[170px] " >
               <AvatarImage src={`/avatar${user.avatar}.png`} alt="avatar" />
               <AvatarFallback>AV</AvatarFallback>
