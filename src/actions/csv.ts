@@ -44,7 +44,9 @@ export const saveCSV = async (lotesRes: any[]) => {
 
             const line2 = line
 
-            const indexCod = line2.findIndex(item => item.trim().toLowerCase().includes('codigoimovel') || item.trim().toLowerCase().includes('bic'));
+            const indexCod = line2.findIndex(item => 
+                item.trim().toLowerCase().includes('codigoimovel') || 
+                item.trim().toLowerCase().includes('bic'));
             const indexNum = line2.findIndex(item =>
                 item.trim().toLowerCase().includes('numerocorresp') ||
                 item.trim().toLowerCase().includes('numerocorrespondente') ||

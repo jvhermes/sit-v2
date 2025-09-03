@@ -50,6 +50,7 @@ export const updateAtividade = async ({ id, nome }: UpdateAtividade) => {
         }
     })
 
+    const atividade1 = await fetch('http://localhost:3001'+ new URLSearchParams({id:id}).toString(),{method: "POST",body:JSON.stringify({ nome: nome}),})
     return atividade
 }
 
