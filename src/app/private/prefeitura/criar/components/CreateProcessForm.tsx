@@ -60,7 +60,7 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 
 import { createProcesso } from "@/actions/processo";
-import { Lote,Atividade,Cartorio,Tipo } from "../../../../../../types/types";
+import { Lote,Atividade,Cartorio,Tipo } from "../../../../../types/types";
 
 type CreateProcessProps = {
     atividades: Atividade[]

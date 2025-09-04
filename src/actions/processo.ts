@@ -6,7 +6,7 @@ import { CreateProcessSquema, RespostaLoteSquema, RespostaPessoaSquema } from "@
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
 import api from "@/lib/api"
-import { Lote } from "../../types/types"
+import { Lote } from "../types/types"
 
 export const deleteProcesso = async (id: number | unknown) => {
 
