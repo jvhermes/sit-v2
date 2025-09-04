@@ -7,7 +7,6 @@ import { createSetor,updateSetor,deleteSetor} from "./setor"
 import { createTipo,updateTipo,deleteTipo } from "./tipos"
 
 
-
 export const handleNewNome = async (tipo:string,nome:string) => {
 
     if(tipo === "Atividade"){

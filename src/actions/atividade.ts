@@ -1,26 +1,11 @@
 "use server"
-import prisma from "@/utils/db"
-
+import api from "@/lib/api"
 
 
 
 export const createAtividade = async (nome: string) => {
-    const atividadeExiste = await prisma.atividade.findFirst({
-        where: {
-            nome
-        }
-    })
 
-    if (atividadeExiste) {
-        return null
-    }
-
-    const atividade = await prisma.atividade.create({
-        data: {
-            nome,
-        }
-    })
-
+    const atividade = await api.post(`/atividade`, { nome: nome })
     return atividade
 }
 
@@ -32,41 +17,13 @@ interface UpdateAtividade {
 
 export const updateAtividade = async ({ id, nome }: UpdateAtividade) => {
 
-
-    const atividadeExiste = await prisma.atividade.findFirst({
-        where: {
-            nome
-        }
-    })
-
-    if (atividadeExiste) {
-        return null
-    }
-
-    const atividade = await prisma.atividade.update({
-        where: { id },
-        data: {
-            nome,
-        }
-    })
-
-    const atividade1 = await fetch('http://localhost:3001'+ new URLSearchParams({id:id}).toString(),{method: "POST",body:JSON.stringify({ nome: nome}),})
+    const atividade = await api.put(`/atividade/${id}`, { nome: nome })
     return atividade
 }
 
 
 
 export const deleteAtividade = async (id: string) => {
-    try {
-        const atividade = await prisma.atividade.delete({
-            where: {
-                id
-            }
-        })
-
-        return atividade
-
-    } catch (err) {
-        return null
-    }
+    const atividade = await api.delete(`/atividade/${id}`)
+    return atividade
 }

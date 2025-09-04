@@ -22,7 +22,6 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import Link from "next/link"
 import { usePathname } from 'next/navigation'
 
 interface DataTableProps<TData, TValue> {

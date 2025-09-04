@@ -46,7 +46,6 @@ import {
 import { FaPlus } from "react-icons/fa";
 import { useState, useRef, useCallback, ChangeEvent } from "react";
 import { CreateProcessSquema } from "@/schemas/process";
-import { Atividade, Cartorio, Lote, TipoDeProcesso } from "@prisma/client";
 import Link from "next/link";
 import { toast } from "sonner"
 import {
@@ -61,11 +60,12 @@ import { Badge } from "@/components/ui/badge";
 import { X } from "lucide-react";
 
 import { createProcesso } from "@/actions/processo";
+import { Lote,Atividade,Cartorio,Tipo } from "../../../../../../types/types";
 
 type CreateProcessProps = {
     atividades: Atividade[]
     cartorios: Cartorio[]
-    tipos: TipoDeProcesso[]
+    tipos: Tipo[]
     lotes: Lote[]
 }
 

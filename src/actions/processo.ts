@@ -1,13 +1,12 @@
 "use server"
-import prisma from "@/utils/db"
 import { format, toDate, isAfter } from "date-fns"
-import { auth } from "@/auth"
 import { Processos } from "@/app/private/prefeitura/columns"
 import { CreateProcessSquema, RespostaLoteSquema, RespostaPessoaSquema } from "@/schemas/process"
 
-import { Lote, ProcessoPrefeitura } from "@prisma/client"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
+import api from "@/lib/api"
+import { Lote } from "../../types/types"
 
 export const deleteProcesso = async (id: number | unknown) => {
 

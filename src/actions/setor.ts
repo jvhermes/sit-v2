@@ -1,24 +1,10 @@
 "use server"
-import prisma from "@/utils/db"
 
+import api from "@/lib/api"
 
 export const createSetor = async (nome: string) => {
-    const setorExiste = await prisma.setor.findFirst({
-        where: {
-            nome
-        }
-    })
 
-    if (setorExiste) {
-        return null
-    }
-
-    const setor = await prisma.setor.create({
-        data: {
-            nome,
-        }
-    })
-
+    const setor = await api.post(`/setor`, { nome: nome })
     return setor
 }
 
@@ -30,24 +16,7 @@ interface UpdateSetor {
 
 export const updateSetor = async ({ id, nome }: UpdateSetor) => {
 
-
-    const setorExiste = await prisma.setor.findFirst({
-        where: {
-            nome
-        }
-    })
-
-    if (setorExiste) {
-        return null
-    }
-
-    const setor = await prisma.setor.update({
-        where: { id },
-        data: {
-            nome,
-        }
-    })
-
+    const setor = await api.put(`/setor/${id}`, { nome: nome })
     return setor
 
 }
@@ -55,14 +24,6 @@ export const updateSetor = async ({ id, nome }: UpdateSetor) => {
 
 
 export const deleteSetor = async (id: string) => {
-    try {
-        const setor = await prisma.setor.delete({
-            where: {
-                id
-            }
-        })
-        return setor
-    } catch (err) {
-        return null
-    }
+    const setor = await api.delete(`/setor/${id}`)
+    return setor
 }
