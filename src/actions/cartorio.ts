@@ -15,7 +15,6 @@ interface UpdateCartorio {
 
 export const updateCartorio = async ({ id, nome }: UpdateCartorio) => {
 
-
     const cartorio = await api.put(`/cartorio/${id}`, { nome: nome })
     return cartorio
 }

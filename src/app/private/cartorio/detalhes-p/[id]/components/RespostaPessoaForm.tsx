@@ -11,16 +11,15 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RespostaPessoaSquema } from '@/schemas/process'
-
+import { ProcessoPrefeituraDetail } from "@/types/types";
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from "@/components/ui/button"
-import { ProcessoPrefeitura } from "@prisma/client"
 import { respondeProcessoPessoa } from "@/actions/processo"
 import { toast } from "sonner"
 
 type FormProps = {
 
-    processo: ProcessoPrefeitura
+    processo: ProcessoPrefeituraDetail
 }
 export function RespostaPessoaForm({ processo }: FormProps) {
 

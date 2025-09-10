@@ -1,7 +1,6 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React from 'react'
-import prisma from '@/utils/db'
 import { Title } from '@/components/Title'
 import { format } from 'date-fns'
 import { Buttons } from './components/Buttons'
@@ -16,39 +15,17 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { Textarea } from '@/components/ui/textarea'
+import { ProcessoPrefeituraDetail } from '@/types/types'
+import api from '@/lib/api'
 
-const fechData = async (idString: string) => {
+const fechData = async (id: string) => {
 
-  const id = parseInt(idString)
-  const processo = prisma.processoPrefeitura.findFirst({
-    where: {
-      id
-    }, include: {
-      cartorio: true,
-      setor: true,
-      descricao_lotes: true,
-      descricao_pessoas: true,
-      tipo:true,
-      resposta: {
-        include: {
-          descricao: true
-        }
-      },
-      respostaPessoa: true,
-      lote: {
-        include: {
-          lote: true
-        }
-      }
-    }
-  })
-
-
+  const processo: ProcessoPrefeituraDetail = await api.get(`/processop/${id}`)
   return processo
 }
 export default async function page({ params }: {
   params: { id: string }
-  
+
 }) {
 
   const processo = await fechData(params.id)
@@ -131,23 +108,23 @@ export default async function page({ params }: {
 
             <div className='flex gap-4 w-full flex-wrap'>
               <p>Lotes Incluídos:</p>
-              {processo.lote.map((item, index) => {
+              {processo.lote_vinculado.map((item, index) => {
                 return (
                   <div key={index} className='w-full min-w-[350px] '>
                     <Card>
                       <CardContent className='p-6 flex'>
                         <div >
-                          <p>Lote: <strong>{item.lote.lote}</strong></p>
-                          <p>Código do Imóvel: <strong>{item.lote.codigo_imovel}</strong></p>
-                          <p>Proprietário: <strong>{item.lote.proprietario}</strong></p>
-                          <p>Bairro: <strong>{item.lote.bairro}</strong></p>
-                          <p>Quadra: <strong>{item.lote.quadra}</strong></p>
+                          <p>Lote: <strong>{item.lote}</strong></p>
+                          <p>Código do Imóvel: <strong>{item.codigo_imovel}</strong></p>
+                          <p>Proprietário: <strong>{item.proprietario}</strong></p>
+                          <p>Bairro: <strong>{item.bairro}</strong></p>
+                          <p>Quadra: <strong>{item.quadra}</strong></p>
 
-                          <p>Número: <strong>{item.lote.numero}</strong></p>
-                          <p>Logradouro: <strong>{item.lote.logradouro}</strong></p>
-                          <p>Área: <strong>{item.lote.area_total}</strong></p>
-                          <p>Testada: <strong>{item.lote.testada}</strong></p>
-                          <p>Matrícula: <strong>{item.lote.matricula || "Não informada"}</strong></p>
+                          <p>Número: <strong>{item.numero}</strong></p>
+                          <p>Logradouro: <strong>{item.logradouro}</strong></p>
+                          <p>Área: <strong>{item.area_total}</strong></p>
+                          <p>Testada: <strong>{item.testada}</strong></p>
+                          <p>Matrícula: <strong>{item.matricula || "Não informada"}</strong></p>
                         </div>
                       </CardContent>
                     </Card>

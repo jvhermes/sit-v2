@@ -9,7 +9,7 @@ import {
 import { useState } from "react";
 import { LoteList } from "./loteList";
 import { AdminTable } from "./adminTable";
-import { Atividade, Cartorio, Setor, TipoDeProcesso } from "@prisma/client";
+import { Atividade, Cartorio, Setor, Tipo} from "../../../../types/types";
 
 import { adminColumns,UserTableType,usuariosColumns,tipoColumns} from "./columns";
 
@@ -19,7 +19,7 @@ interface AdminProps  {
     setores:Setor[]
     usuarios:UserTableType[]
     atividades:Atividade[]
-    tipos:TipoDeProcesso[]
+    tipos:Tipo[]
 }
 export function AdminMenu({atividades,cartorios,setores,usuarios,tipos} : AdminProps) {
 

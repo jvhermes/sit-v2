@@ -8,7 +8,7 @@ import {
     AvatarFallback,
     AvatarImage,
 } from "@/components/ui/avatar"
-import { Tipo } from "@prisma/client"
+import { TipoProcesso } from "@/types/types"
 
 type AdminTableType = {
     id: string,
@@ -18,7 +18,7 @@ type AdminTableType = {
 type TipoTableType = {
     id:number,
     nome:string,
-    tipo:Tipo
+    tipo:TipoProcesso
 }
 
 export type UserTableType = {

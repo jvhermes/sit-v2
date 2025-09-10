@@ -21,8 +21,6 @@ export const updateAtividade = async ({ id, nome }: UpdateAtividade) => {
     return atividade
 }
 
-
-
 export const deleteAtividade = async (id: string) => {
     const atividade = await api.delete(`/atividade/${id}`)
     return atividade

@@ -1,19 +1,18 @@
 import { z } from "zod"
-import { Tipo } from "@prisma/client"
 
 export const CreateProcessCartorioSquema = z.object({
     num_processo: z.string({
         required_error:"Campo Obrigatório"
     }).min(1,"Campo Obrigatório"),
 
-    texto : z.string(),
-    atividade : z.string({
+    observacao : z.string(),
+    atividade_id : z.string({
         required_error:"Campo Obrigatório"
     }),
-    setor : z.string({
+    setor_id : z.string({
         required_error:"Campo Obrigatório"
     }),
-    tipo: z.string( {
+    tipo_id: z.string( {
         required_error: "Campo Obrigatório"
     }),
     ano :z.string().min(2,{message:"Campo Obrigatório"}),
@@ -23,12 +22,12 @@ export const CreateProcessCartorioSquema = z.object({
     .transform((value) => {
       return value as File | null | undefined;
     }),
-    descricao_lotes:z.array(z.object({
+    descricao_lote:z.array(z.object({
         lote:z.string(),
         area:z.string(),
         testada:z.string()
     })).optional(),
-    descricao_pessoas:z.array(z.object({
+    descricao_pessoa:z.array(z.object({
         nome:z.string(),
         telefone:z.string(),
         cpf:z.string(),

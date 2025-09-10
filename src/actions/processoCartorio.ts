@@ -1,253 +1,72 @@
 "use server"
 import { revalidatePath } from "next/cache"
-import prisma from "@/utils/db"
 import { format } from "date-fns"
 import { ProcessosCartorio } from "@/app/private/cartorio/columns"
-
-import { Lote } from "@prisma/client"
 import { CreateProcessCartorioSquema } from "@/schemas/processCartorio"
-import { auth } from "@/auth"
 import z from "zod"
+import api from "@/lib/api"
+import { Atividade, Cartorio, Lote, Setor, Tipo } from "@/types/types"
 
 export const deleteProcessoCartorio = async (id: number | unknown) => {
-    if(typeof(id) !== "number"){
-        return
-    }
-    try {
-        await prisma.processoCartorioToLotee.deleteMany({
-            where: {
-                processo_id: id
-            }
-        })
-        await prisma.descricaoLotes.deleteMany({
-            where: {
-                processo_cartorio_id: id
-            }
-        })
-        await prisma.descricaoPessoas.deleteMany({
-            where: {
-                processo_cartorio_id: id
-            }
-        })
-        const processo = await prisma.processoCartorio.delete({
-            where: {
-                id
-            }
-        })
 
-        return processo
-    } catch {
-        return null
-    }
+    const cartorio = await api.delete(`/processoc/${id}`)
+
+    return cartorio
 
 }
 
 export const closeProcessoCartorio = async (id: number) => {
-    const data = new Date()
-    try {
-        const processo = await prisma.processoCartorio.update({
-            where: {
-                id
-            },
-            data: {
-                respondido_em: data,
-                ativo: false
-            }
-        })
-        revalidatePath("private/prefeitura")
-        return processo
-    } catch {
-        return null
-    }
+    const processo = await api.put(`processoc/${id}/close`)
+    return processo
 }
 
-export const fetchProcessosCartorio = async (ativo: boolean): Promise<ProcessosCartorio[]> => {
+export const fetchProcessosCartorio = async (): Promise<ProcessosCartorio[]> => {
 
+    const processos: ProcessosCartorio[] = await api.get("/processop")
 
-    const session = await auth()
+    return processos
 
-    if (session && session.user.perfil === "CARTORIO") {
-        const res = await prisma.processoCartorio.findMany({
-            where: {
-                ativo,
-                fonte_id: session?.user.cartorio_id,
-            }, include: {
-                lote: {
-                    include: {
-                        lote: true
-                    }
-                },
-                tipo:true
-            }
+}
 
-        })
-        const processos = res?.map((item) => {
+export const fetchProcessosCartorioInativo = async (): Promise<ProcessosCartorio[]> => {
 
-            return {
-                id: item.id,
-                numero: item.num_processo.toString(),
-                tipo: item.tipo.tipo.toLowerCase(),
-                proprietario: item.lote[0].lote.proprietario || "",
-                bairro: item.lote[0].lote.bairro || "",
-                quadra: item.lote[0].lote.quadra || "",
-                lote: item.lote[0].lote.lote || "",
-                criado: format(item.criado_em, "dd/MM/yyy"),
+    const processos: ProcessosCartorio[] = await api.get("/processop/inativo")
 
-            }
-        })
+    return processos
 
-        return processos
-    }
-    if (session && session.user.perfil === "PREFEITURA") {
-        const res = await prisma.processoCartorio.findMany({
-            where: {
-                ativo,
-                destino_id: session?.user.setor_id
-            }, include: {
-                lote: {
-                    include: {
-                        lote: true
-                    }
-                },
-                tipo:true
-            }
-
-        })
-        const processos = res?.map((item) => {
-
-            return {
-                id: item.id,
-                numero: item.num_processo.toString(),
-                tipo: item.tipo.tipo.toLowerCase(),
-                proprietario: item.lote[0].lote.proprietario || "",
-                bairro: item.lote[0].lote.bairro || "",
-                quadra: item.lote[0].lote.quadra || "",
-                lote: item.lote[0].lote.lote || "",
-                criado: format(item.criado_em, "dd/MM/yyy"),
-
-            }
-        })
-
-        return processos
-    } else {
-        const res = await prisma.processoCartorio.findMany({
-            where: {
-                ativo
-            }
-            , include: {
-                lote: {
-                    include: {
-                        lote: true
-                    }
-                },
-                tipo:true
-            }
-
-        })
-        const processos = res?.map((item) => {
-
-            return {
-                id: item.id,
-                numero: item.num_processo.toString(),
-                tipo: item.tipo.tipo.toLowerCase(),
-                proprietario: item.lote[0].lote.proprietario || "",
-                bairro: item.lote[0].lote.bairro || "",
-                quadra: item.lote[0].lote.quadra || "",
-                lote: item.lote[0].lote.lote || "",
-                criado: format(item.criado_em, "dd/MM/yyy"),
-
-            }
-        })
-
-        return processos
-    }
 }
 
 
-
-export const createProcessoCartorio = async (values: z.infer<typeof CreateProcessCartorioSquema>, lote_ids: Lote[]) => {
+export const createProcessoCartorio = async (values: z.infer<typeof CreateProcessCartorioSquema>, lotes_id: Lote[]) => {
 
     const validateFields = CreateProcessCartorioSquema.safeParse(values)
-    const session = await auth()
 
-    if (!session) {
-        return null
-    }
 
     if (!validateFields.success) {
         return null
     }
-    const { num_processo, ano, texto, tipo, atividade, setor, descricao_lotes, descricao_pessoas } = validateFields.data
-    const processoExiste = await prisma.processoCartorio.findFirst({
-        where: {
-            num_processo: num_processo
-        }
-    })
-    if (processoExiste) {
-        return null
-    }
+    const payload = {
+        ...validateFields.data,
+        lotes_id: lotes_id
+    };
 
-    const processo = await prisma.processoCartorio.create({
-        data: {
-            num_processo,
+    const processo = await api.post("/processoc", payload);
 
-            ano,
-            observacao: texto,
-            tipo_id:parseInt(tipo),
-            atividade_id: atividade,
-            destino_id: setor,
-            fonte_id: session.user.cartorio_id
-        }
-    })
-
-    for await (let item of lote_ids) {
-        await prisma.processoCartorioToLotee.create({
-            data: {
-                lote_id: item.id,
-                processo_id: processo.id
-            }
-        })
-    }
-    if (tipo !== "OUTRO" && descricao_lotes) {
-        const lotesdesc = tipo === "DESMEMBRAMENTO" ? descricao_lotes : descricao_lotes.length > 1 ? descricao_lotes.slice(1) : descricao_lotes;
-
-        for await (let item of lotesdesc) {
-            await prisma.descricaoLotes.create({
-                data: {
-                    processo_cartorio_id: processo.id,
-                    lote: item.lote,
-                    area: item.area,
-                    testada: item.testada
-                }
-            })
-        }
-    }
-
-    if (tipo === "OUTRO" && descricao_pessoas) {
-        for await (let item of descricao_pessoas) {
-            await prisma.descricaoPessoas.create({
-                data: {
-                    nome: item.nome,
-                    cpf: item.cpf,
-                    email: item.email,
-                    telefone: item.telefone,
-                    processo_cartorio_id: processo.id
-                }
-            })
-        }
-    }
 
     revalidatePath("/private/cartorio")
     return processo;
 }
 
+interface DataProps {
+    atividades: Atividade[];
+    setores: Setor[];
+    lotes: Lote[];
+    tipos: Tipo[]
+}
+
 export const fechDataCartorio = async () => {
 
-    const [atividades, setores, lotes,tipos] = await Promise.all([
-        prisma.atividade.findMany(),
-        prisma.setor.findMany(),
-        prisma.lote.findMany(),
-        prisma.tipoDeProcesso.findMany()
-    ])
-    return { atividades, setores, lotes,tipos }
+    const { atividades, setores, lotes, tipos }: DataProps = await api.get("/data/criar/cartorio")
+
+    return { atividades, setores, lotes, tipos }
 }

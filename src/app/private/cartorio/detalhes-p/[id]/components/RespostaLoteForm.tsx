@@ -32,13 +32,14 @@ import {
 } from "@/components/ui/table"
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from "@/components/ui/button"
-import { ProcessoPrefeitura } from "@prisma/client"
 import { respondeProcessoLote } from "@/actions/processo"
 import { toast } from "sonner"
+import { ProcessoPrefeituraDetail } from "@/types/types";
+
 
 type FormProps = {
     descricaoRespostaList: DescricaoAprovacao[],
-    processo: ProcessoPrefeitura
+    processo: ProcessoPrefeituraDetail
 }
 
 export function RespostaLoteForm({ descricaoRespostaList, processo }: FormProps) {

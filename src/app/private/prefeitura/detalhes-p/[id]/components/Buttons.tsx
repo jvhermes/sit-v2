@@ -1,7 +1,6 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ProcessoPrefeitura, Status } from "@prisma/client"
 import { FaFilePdf } from "react-icons/fa";
 import { deleteProcesso } from "@/actions/processo";
 import {
@@ -15,11 +14,11 @@ import {
 import { toast } from "sonner";
 import { useState } from "react";
 import { CloseProcessoForm } from "./CloseProcessoForm";
-
+import { ProcessoPrefeituraDetail,Status } from "@/types/types";
 interface ButtonsProps {
 
   status: Status,
-  processo: ProcessoPrefeitura,
+  processo: ProcessoPrefeituraDetail,
 
 }
 export function Buttons({ status, processo }: ButtonsProps) {

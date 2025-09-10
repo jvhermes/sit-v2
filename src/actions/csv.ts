@@ -15,6 +15,8 @@ export const saveCSV = async (file: File) => {
     revalidatePath("/private/prefeitura/criar")
     revalidatePath("/private/cartorio/criar")
 
+    return res
+
 }
 
 

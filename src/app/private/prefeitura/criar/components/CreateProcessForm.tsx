@@ -184,20 +184,20 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
             prazo: add(new Date(), {
                 days: 60
             }),
-            tipo:'1',
-            descricao_lotes: [{ lote: "", area: "", testada: "" }],
-            descricao_pessoas: [{ nome: "", cpf: "", email: "", telefone: "" }]
+            tipo_id:'1',
+            descricao_lote: [{ lote: "", area: "", testada: "" }],
+            descricao_pessoa: [{ nome: "", cpf: "", email: "", telefone: "" }]
         }
     })
 
 
     const { append: appendLotes, fields: fieldsLotes, remove: removeLotes } = useFieldArray({
-        name: "descricao_lotes",
+        name: "descricao_lote",
         control: form.control
     })
 
     const { append: appendPessoa, fields: fieldsPessoa, remove: removePessoa } = useFieldArray({
-        name: "descricao_pessoas",
+        name: "descricao_pessoa",
         control: form.control
     })
 
@@ -235,13 +235,13 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
         }
         removePessoa(fieldsLotes.length - 1)
     }
-    const tipoState = form.watch("tipo")
+    const tipoState = form.watch("tipo_id")
     const fileRef = form.register("pdf");
 
     const handleSubmit = async (values: z.infer<typeof CreateProcessSquema>) => {
 
 
-        const lote_ids = values.tipo === '1' ? loteInfos : selected
+        const lote_ids = values.tipo_id === '1' ? loteInfos : selected
 
         const res = createProcesso(values, lote_ids)
 
@@ -342,7 +342,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                         )
                         }>
                         </FormField>
-                        <FormField name="atividade" control={form.control} render={({ field }) => (
+                        <FormField name="atividade_id" control={form.control} render={({ field }) => (
                             <FormItem >
                                 <FormLabel>Atividade</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -365,7 +365,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                         )
                         }>
                         </FormField>
-                        <FormField name="tipo" control={form.control} render={({ field }) => (
+                        <FormField name="tipo_id" control={form.control} render={({ field }) => (
                             <FormItem >
                                 <FormLabel>Tipo de Processo</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value.toLocaleString()}>
@@ -642,7 +642,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                     <TableBody>
                                         <TableRow>
                                             <TableCell>
-                                                <FormField name={`descricao_lotes.${0}.lote`} control={form.control} render={({ field }) => (
+                                                <FormField name={`descricao_lote.${0}.lote`} control={form.control} render={({ field }) => (
                                                     <FormItem >
                                                         <FormControl>
                                                             <Input className="w-[270px]" placeholder='ex: "00-X"' type="text" {...field} />
@@ -656,7 +656,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                                 </FormField>
                                             </TableCell>
                                             <TableCell>
-                                                <FormField name={`descricao_lotes.${0}.area`} control={form.control} render={({ field }) => (
+                                                <FormField name={`descricao_lote.${0}.area`} control={form.control} render={({ field }) => (
                                                     <FormItem >
 
                                                         <FormControl>
@@ -671,7 +671,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                                 </FormField>
                                             </TableCell>
                                             <TableCell>
-                                                <FormField name={`descricao_lotes.${0}.testada`} control={form.control} render={({ field }) => (
+                                                <FormField name={`descricao_lote.${0}.testada`} control={form.control} render={({ field }) => (
                                                     <FormItem >
                                                         <FormControl>
                                                             <Input className="w-[270px]" type="text" {...field} placeholder='ex: "00.00"' />
@@ -713,7 +713,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                             return (
                                                 <TableRow key={item.id}>
                                                     <TableCell>
-                                                        <FormField name={`descricao_lotes.${index}.lote`} control={form.control} render={({ field }) => (
+                                                        <FormField name={`descricao_lote.${index}.lote`} control={form.control} render={({ field }) => (
                                                             <FormItem >
                                                                 <FormControl>
                                                                     <Input className="w-[270px]" placeholder='ex: "00-X"' type="text" {...field} />
@@ -727,7 +727,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                                         </FormField>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <FormField name={`descricao_lotes.${index}.area`} control={form.control} render={({ field }) => (
+                                                        <FormField name={`descricao_lote.${index}.area`} control={form.control} render={({ field }) => (
                                                             <FormItem >
 
                                                                 <FormControl>
@@ -742,7 +742,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                                         </FormField>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <FormField name={`descricao_lotes.${index}.testada`} control={form.control} render={({ field }) => (
+                                                        <FormField name={`descricao_lote.${index}.testada`} control={form.control} render={({ field }) => (
                                                             <FormItem >
                                                                 <FormControl>
                                                                     <Input className="w-[270px]" type="text" {...field} placeholder='ex: "00.00"' />
@@ -787,7 +787,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                             return (
                                                 <TableRow key={item.id}>
                                                     <TableCell>
-                                                        <FormField name={`descricao_pessoas.${index}.nome`} control={form.control} render={({ field }) => (
+                                                        <FormField name={`descricao_pessoa.${index}.nome`} control={form.control} render={({ field }) => (
                                                             <FormItem >
                                                                 <FormControl>
                                                                     <Input className="w-[270px]" type="text" {...field} />
@@ -801,7 +801,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                                         </FormField>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <FormField name={`descricao_pessoas.${index}.cpf`} control={form.control} render={({ field }) => (
+                                                        <FormField name={`descricao_pessoa.${index}.cpf`} control={form.control} render={({ field }) => (
                                                             <FormItem >
 
                                                                 <FormControl>
@@ -816,7 +816,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                                         </FormField>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <FormField name={`descricao_pessoas.${index}.email`} control={form.control} render={({ field }) => (
+                                                        <FormField name={`descricao_pessoa.${index}.email`} control={form.control} render={({ field }) => (
                                                             <FormItem >
                                                                 <FormControl>
                                                                     <Input className="w-[270px]" type="text" {...field} />
@@ -829,7 +829,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                                                         </FormField>
                                                     </TableCell>
                                                     <TableCell>
-                                                        <FormField name={`descricao_pessoas.${index}.telefone`} control={form.control} render={({ field }) => (
+                                                        <FormField name={`descricao_pessoa.${index}.telefone`} control={form.control} render={({ field }) => (
                                                             <FormItem >
                                                                 <FormControl>
                                                                     <Input className="w-[270px]" type="text" {...field} />
@@ -883,7 +883,7 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
                         }>
                         </FormField>
 
-                        <FormField name="cartorio" control={form.control} render={({ field }) => (
+                        <FormField name="cartorio_id" control={form.control} render={({ field }) => (
                             <FormItem >
                                 <FormLabel>Encaminhar para:</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>

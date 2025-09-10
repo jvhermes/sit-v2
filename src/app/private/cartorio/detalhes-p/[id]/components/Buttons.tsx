@@ -1,19 +1,19 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { ProcessoPrefeitura, Status, TipoDeProcesso } from "@prisma/client"
 import { RespostaLoteForm } from './RespostaLoteForm'
 import { DescricaoAprovacao } from "../page"
 import { useState } from "react";
 import { RespostaPessoaForm } from "./RespostaPessoaForm";
 import { FaFilePdf } from "react-icons/fa";
+import { ProcessoPrefeituraDetail,Status,Tipo} from "@/types/types";
 
 interface ButtonsProps {
 
   status: Status,
-  processo: ProcessoPrefeitura,
+  processo: ProcessoPrefeituraDetail,
   descricaoRespostaList: DescricaoAprovacao[],
-  tipo:TipoDeProcesso | undefined
+  tipo:Tipo | undefined
 }
 export function Buttons({ status, processo,tipo, descricaoRespostaList }: ButtonsProps) {
 

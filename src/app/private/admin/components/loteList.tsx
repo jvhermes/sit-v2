@@ -4,31 +4,11 @@ import { Button } from "@/components/ui/button"
 import { useState, ChangeEvent, FormEvent } from "react"
 import { toast } from "sonner"
 import { saveCSV } from "@/actions/csv"
-import Papa from 'papaparse';
 
 const acceptableCSVFileTypes = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .csv"
 
 
-async function parseCSV(file: File): Promise<any[]> {
-    return new Promise((resolve, reject) => {
-        const lotesRes: any[] = [];
 
-        Papa.parse(file, {
-
-            complete: function (res) {
-                resolve(res.data);
-            },
-            quoteChar: "",
-            skipEmptyLines: true,
-            delimiter:";",
-
-            error: function (error) {
-                reject(error);
-            },
-            
-        });
-    });
-}
 
 export function LoteList() {
     const [file, setFile] = useState<File | null>(null)
@@ -59,10 +39,8 @@ export function LoteList() {
                 }
             })
         } else {
-            const lotesRes = await parseCSV(file);
-            console.log(lotesRes)
-            const res =  saveCSV(lotesRes)
-
+       
+            const res = await saveCSV(file)
             if(!res){
                 toast.error("Erro ao atualizar base de dados", {
                     duration: 3000,

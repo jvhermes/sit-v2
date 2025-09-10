@@ -10,28 +10,23 @@ export const CreateProcessSquema = z.object({
         required_error: "Campo Obrigatório"
     }).min(new Date(), { message: "Prazo não pode ser anterior a hoje" }),
     texto: z.string(),
-    atividade: z.string({
+    atividade_id: z.string({
         required_error: "Campo Obrigatório"
     }),
-    cartorio: z.string({
+    cartorio_id: z.string({
         required_error: "Campo Obrigatório"
     }),
-    tipo: z.string( {
+    tipo_id: z.string( {
         required_error: "Campo Obrigatório"
     }),
     ano: z.string().min(2, { message: "Campo Obrigatório" }),
-    pdf: z
-        .unknown()
-        .optional()
-        .transform((value) => {
-            return value as File | null | undefined;
-        }),
-    descricao_lotes: z.array(z.object({
+    pdf: z.unknown().optional().transform((value) => {return value as File | null | undefined;}),
+    descricao_lote: z.array(z.object({
         lote: z.string(),
         area: z.string(),
         testada: z.string()
     })).optional(),
-    descricao_pessoas: z.array(z.object({
+    descricao_pessoa: z.array(z.object({
         nome: z.string(),
         telefone: z.string(),
         cpf: z.string(),

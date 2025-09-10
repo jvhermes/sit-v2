@@ -1,20 +1,16 @@
 
-
 import { Title } from "@/components/Title"
-import { auth } from "@/auth"
 import { ProcessosMenuEncerrados } from "./components/ProcessosMenu"
-import { fetchProcessos } from "@/actions/processo"
+import { fetchProcessosInativo } from "@/actions/processo"
 
-import { fetchProcessosCartorio } from "@/actions/processoCartorio"
+import { fetchProcessosCartorioInativo } from "@/actions/processoCartorio"
 
 
 export default async function PrefeituraPage() {
 
-    const session = await auth()
-    const perfil = session?.user.perfil
-    
-    const processos = await fetchProcessos(false)
-    const processosCartorio = await fetchProcessosCartorio(false)
+
+    const processos = await fetchProcessosInativo()
+    const processosCartorio = await fetchProcessosCartorioInativo()
     return (
         <>
             <Title name="Processos" text="Listagem de processos encerrados"></Title>

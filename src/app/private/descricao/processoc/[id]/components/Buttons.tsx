@@ -1,7 +1,7 @@
 "use client"
 
 
-import { ProcessoCartorio } from "@prisma/client"
+import { ProcessoCartorioDetail } from "@/types/types";
 import { Button } from "@/components/ui/button";
 import { closeProcessoCartorio } from "@/actions/processoCartorio";
 import { toast } from "sonner";
@@ -9,7 +9,7 @@ import { FaFilePdf } from "react-icons/fa";
 
 interface ButtonsProps {
 
-  processo: ProcessoCartorio,
+  processo: ProcessoCartorioDetail,
 
 }
 export function Buttons({ processo }: ButtonsProps) {

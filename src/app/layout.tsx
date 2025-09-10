@@ -2,9 +2,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/app/globals.css";
-import AuthProvider from "@/contexts/AuthProvider";
 import { Toaster } from "@/components/ui/sonner"
-
+import { AuthProvider } from "@/context/auth_provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,9 +21,8 @@ export default function Layout({
   return (
     <html lang="en">
       <body className={`${inter.className} flex `}>
-        
         <AuthProvider>
-        <Toaster />
+          <Toaster />
           {children}
         </AuthProvider>
       </body>

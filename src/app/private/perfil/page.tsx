@@ -1,8 +1,6 @@
 
 
-import { Perfil } from "@prisma/client"
-import prisma from "@/utils/db"
-import { auth } from "@/auth";
+
 import { Title } from "@/components/Title";
 import {
   Avatar,
@@ -10,54 +8,23 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { ModalSenha } from "./components/ModalSenha";
+import { UserPerfilProps } from "@/types/types";
+import api from "@/lib/api";
+import { useContext } from "react";
+import { AuthContext } from "@/context/auth_provider";
 
-type UserFetch = {
-  id:string,
-  nome: string,
-  perfil: Perfil,
-  email: string,
-  avatar: string,
-  cartorio: {
-    nome: string
-  } | null,
-  setor: {
-    nome: string
-  } | null
-}
 
-const fetchUser = async (id: string | undefined): Promise<UserFetch | null> => {
+const fetchUser = async (id: string | undefined): Promise<UserPerfilProps | null> => {
 
-  const user = await prisma.usuario.findFirst({
-    where: {
-      id: id
-    },
-    select: {
-      id:true,
-      nome: true,
-      email: true,
-      avatar: true,
-      perfil: true,
-      cartorio: {
-        select: {
-          nome: true
-        }
-      },
-      setor: {
-        select: {
-          nome: true
-        }
-      }
-    }
-  });
+  const user:UserPerfilProps = await api.get(`/user/${id}`)
 
   return user;
 }
 
 export default async function Usuario() {
 
-  const session = await auth()
+  const { user, loading } = useContext(AuthContext);
 
-  const user = await fetchUser(session?.user.id);
 
   return (
     <>
