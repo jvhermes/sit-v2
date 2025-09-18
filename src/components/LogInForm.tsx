@@ -14,14 +14,11 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 
-
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { LogUserSchema } from "@/schemas/user";
 import { login } from "@/actions/user";
 export function LogInForm() {
     const [error, setError] = useState("")
-    const router = useRouter()
 
     const form = useForm<z.infer<typeof LogUserSchema>>({
         resolver: zodResolver(LogUserSchema),
@@ -33,11 +30,9 @@ export function LogInForm() {
 
     const handleSubmit = async (values: z.infer<typeof LogUserSchema>) => {
         const res = await login(values)
-        
-        if(res?.error){
+        if (res?.error) {
             setError(res.error)
         }
-       
     }
     return (
         <Form {...form}>

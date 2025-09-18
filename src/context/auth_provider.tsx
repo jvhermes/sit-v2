@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     api
-      .get("/auth/me", { withCredentials: true })
+      .get("/user/me", { withCredentials: true })
       .then((res) => setUser(res.data))
       .catch(() => setUser(null))
       .finally(() => setLoading(false));

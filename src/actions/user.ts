@@ -45,17 +45,26 @@ export const login = async (values: z.infer<typeof LogUserSchema>) => {
     if (!validateFields.success) {
         return { error: "Campos inválidos" }
     }
+    try {
+        const res = await api.post('/auth/login', validateFields.data)
+        
+       
+        const token = res.data.acessToken
 
-    const res = await api.post('/auth/login', validateFields.data)
+   
+        nookies.set(null, 'token', token, {
+            maxAge: 60 * 60 * 24, // 1 dia
+            path: '/',
+            httpOnly: true,
+        });
 
-    const token = res.data.access_token
+        revalidatePath("/")
 
-    nookies.set(null, 'token', token, {
-        maxAge: 60 * 60 * 24, // 1 dia
-        path: '/',
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-    });
+        return { data: res.data }
+    } catch (err: any) {
+        return { error: err.response?.data?.message || "Erro no login" }
+    }
+
 
 }
 
