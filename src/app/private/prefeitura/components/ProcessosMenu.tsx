@@ -1,27 +1,33 @@
 "use client"
 import { ProcessTable } from "./ProcessosTable"
 import { Button } from "@/components/ui/button"
-import { Processos, columns } from "../columns"
-import { useState } from "react"
+import { createPrefeituraColumns } from "../columns"
+import { PrefeituraCollumn } from "@/types/types"
+import { useMemo, useState } from "react"
 import { ProcessCartorioTable } from "../../cartorio/components/ProcessosCartorioTable"
-import { ProcessosCartorio, columnsCartorio } from "../../cartorio/columns"
-import { Switch } from "@/components/ui/switch"
-import { Label } from "@/components/ui/label"
+import { createCartorioColumns } from "../../cartorio/columns"
+import { CartorioCollumn } from "@/types/types"
+import { ProcessDirection, ProcessDirectionTabs } from "@/components/ProcessDirectionTabs"
 import Link from "next/link"
+
 interface ProcessosMenuProps {
-    processos: Processos[],
-    processosCart: ProcessosCartorio[]
+    processosP: PrefeituraCollumn[],
+    processosC: CartorioCollumn[]
 }
 
-type ProcessoState = "recebidos" | "enviados"
 
-export function ProcessosMenu({ processos, processosCart }: ProcessosMenuProps) {
-
-    const processoList = processos
-    const processoListCartorio = processosCart
+export function ProcessosMenu({ processosP, processosC }: ProcessosMenuProps) {
 
 
-    const [checked,setChecked] = useState(false)
+    const [direction, setDirection] = useState<ProcessDirection>("recebidos")
+    const processosEnviadosColumns = useMemo(() => createPrefeituraColumns({
+        detailBasePath: "/private/prefeitura/detalhes-p",
+        canDelete: true,
+    }), [])
+    const processosRecebidosColumns = useMemo(() => createCartorioColumns({
+        detailBasePath: "/private/prefeitura/detalhes-c",
+        canDelete: false,
+    }), [])
 
 
     return (
@@ -29,10 +35,7 @@ export function ProcessosMenu({ processos, processosCart }: ProcessosMenuProps) 
 
      
             <div className="py-3 flex justify-between">
-                <div className="flex items-center space-x-2 ml-5">
-                    <Switch id="enviados"  onCheckedChange={() => setChecked(!checked)} />
-                    <Label htmlFor="enviados">Enviados</Label>
-                </div>
+                <ProcessDirectionTabs value={direction} onChange={setDirection} />
                 <Link href={"/private/prefeitura/criar"}>
                     <Button  >Novo Processo</Button>
 
@@ -41,13 +44,13 @@ export function ProcessosMenu({ processos, processosCart }: ProcessosMenuProps) 
             </div>
 
             <div className="my-3">
-                {checked && (
+                {direction === "enviados" && (
 
-                    <ProcessTable data={processoList} columns={columns} />
+                    <ProcessTable data={processosP} columns={processosEnviadosColumns} />
 
                 )}
-                {!checked && (
-                    <ProcessCartorioTable data={processoListCartorio} columns={columnsCartorio} />
+                {direction === "recebidos" && (
+                    <ProcessCartorioTable data={processosC} columns={processosRecebidosColumns} />
                 )}
             </div>
 

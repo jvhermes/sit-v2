@@ -2,7 +2,7 @@
 import { Title } from "@/components/Title";
 import { AdminMenu } from "./components/adminMenu";
 import { Atividade, Cartorio, Setor, Tipo, UserAdminProps } from "@/types/types";
-import api from "@/lib/api";
+import { getAdminData } from "@/actions/data";
 
 interface DataProps {
   atividades: Atividade[];
@@ -14,8 +14,8 @@ interface DataProps {
 
 const fechData = async () => {
 
-  const { tipos, atividades, cartorios, setores, user }: DataProps = await api.get("/data/admin")
-
+  const { tipos, atividades, cartorios, setores, user }: DataProps = await getAdminData()
+  
   const usuarios = user?.map((item) => {
 
     let ativo = ""

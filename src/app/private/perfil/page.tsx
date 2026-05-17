@@ -1,4 +1,4 @@
-
+"use client"
 
 
 import { Title } from "@/components/Title";
@@ -8,22 +8,15 @@ import {
   AvatarImage,
 } from "@/components/ui/avatar"
 import { ModalSenha } from "./components/ModalSenha";
-import { UserPerfilProps } from "@/types/types";
-import api from "@/lib/api";
 import { useContext } from "react";
 import { AuthContext } from "@/context/auth_provider";
 
 
-const fetchUser = async (id: string | undefined): Promise<UserPerfilProps | null> => {
 
-  const user:UserPerfilProps = await api.get(`/user/${id}`)
 
-  return user;
-}
+export default function Usuario() {
 
-export default async function Usuario() {
-
-  const { user, loading } = useContext(AuthContext);
+  const { user} = useContext(AuthContext);
 
 
   return (
@@ -35,7 +28,7 @@ export default async function Usuario() {
 
            <ModalSenha id={user.id} />
           </div>
-          <div className="border bg-whitetipo rounded flex-wrap py-10 flex justify-center sm:justify-start sm:pl-10 items-center gap-10">
+          <div className="border border-primary/15 bg-card rounded flex-wrap py-10 flex justify-center sm:justify-start sm:pl-10 items-center gap-10 shadow-sm">
             < Avatar className="w-[170px] h-[170px] " >
               <AvatarImage src={`/avatar${user.avatar}.png`} alt="avatar" />
               <AvatarFallback>AV</AvatarFallback>
@@ -50,11 +43,7 @@ export default async function Usuario() {
             </div>
           </div>
         </div>
-      ) || (
-        <div className='mt-10'>
-          <p>{"Usuário não está logado"}</p>
-        </div>
-      )}
+      ) }
     </>
   );
 }

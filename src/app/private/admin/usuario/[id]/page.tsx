@@ -2,10 +2,12 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import React from 'react'
-import prisma from '@/utils/db'
 import { Title } from '@/components/Title'
 import UserForm from './components/userForm'
-import { Cartorio, Perfil, Setor } from '@prisma/client'
+import { Cartorio, Perfil, Setor } from '@/types/types'
+import { listSetor } from '@/actions/setor'
+import { listCartorio } from '@/actions/cartorio'
+import { getOne } from '@/actions/user'
 
 export type UserFetch = {
     id:string
@@ -31,9 +33,9 @@ export type CreateUserFetch = {
 }
 
 const fetchCreateUserData = async():Promise<CreateUserFetch> =>{
-    const cartorios = await prisma.cartorio.findMany()
-    const setores = await prisma.setor.findMany()
-
+    const cartorios = await listCartorio()
+    const setores = await listSetor()
+    
     return{cartorios,setores}
 }
 const fechData = async (id: string): Promise<UserFetch | null> => {
@@ -41,32 +43,9 @@ const fechData = async (id: string): Promise<UserFetch | null> => {
   if (id === "criar") {
     return null
   }
-  const user = await prisma.usuario.findFirst({
-    where: {
-      id: id
-    },
-    select: {
-      id:true,
-      nome: true,
-      email: true,
-      avatar: true,
-      perfil: true,
-      ativo: true,
-      cartorio: {
-        select: {
-          nome: true,
-          id:true
-        }
-      },
-      setor: {
-        select: {
-          nome: true,
-          id:true
-        }
-      }
-    }
-  });
+  const res = await getOne(id)
 
+  const user = res
   return user;
 
 }
@@ -86,10 +65,10 @@ export default async function page({ params }: { params: { id: string } }) {
           <div className='w-10/12 mt-10'>
             <div className='py-6'>
               <Link href={"/private/admin"}>
-                <Button variant={"secondary"}>Retornar</Button>
+                <Button variant={"outline"}>Retornar</Button>
               </Link>
             </div>
-            <section className='p-10 flex-col mb-5 border rounded flex  gap-6'>
+            <section className='p-10 flex-col mb-5 bg-card border border-primary/15 rounded shadow-sm flex  gap-6'>
               <UserForm data={data} user={null}></UserForm>
             </section>
           </div>
@@ -102,10 +81,10 @@ export default async function page({ params }: { params: { id: string } }) {
           <div className='w-10/12 mt-10'>
             <div className='py-6'>
               <Link href={"/private/admin"}>
-                <Button variant={"secondary"}>Retornar</Button>
+                <Button variant={"outline"}>Retornar</Button>
               </Link>
             </div>
-            <section className='p-10 flex-col mb-5 border rounded flex  gap-6'>
+            <section className='p-10 flex-col mb-5 bg-card border border-primary/15 rounded shadow-sm flex  gap-6'>
               <UserForm data={data} user={user}></UserForm>
             </section>
           </div>

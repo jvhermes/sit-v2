@@ -39,7 +39,7 @@ export function AdminMenu({atividades,cartorios,setores,usuarios,tipos} : AdminP
         if (type !== "tipo") setTipoSelect(false); else { setTipoSelect(true) }
     }
     return (
-        <section className="w-11/12 rounded flex gap-10 border flex-wrap p-4 my-10 bg-white justify-center md:flex-nowrap">
+        <section className="w-11/12 rounded flex gap-10 border border-primary/15 flex-wrap p-4 my-10 bg-card justify-center shadow-sm md:flex-nowrap">
             <div className="flex flex-col m-6 gap-6 w-[200px]">
                 <Button variant={atividadeSelect ? undefined : "secondary"} onClick={() => changeButton("atividade")} >Atividades</Button>
                 <Button variant={cartorioSelect ? undefined : "secondary"} onClick={() => changeButton("cartorio")} >Cartórios</Button>

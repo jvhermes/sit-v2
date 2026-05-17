@@ -1,14 +1,10 @@
 "use server"
-import api from "@/lib/api"
 
-
+import { demoStore } from "@/data/demo-store"
 
 export const createAtividade = async (nome: string) => {
-
-    const atividade = await api.post(`/atividade`, { nome: nome })
-    return atividade
+    return demoStore.createAtividade(nome)
 }
-
 
 interface UpdateAtividade {
     id: string
@@ -16,12 +12,9 @@ interface UpdateAtividade {
 }
 
 export const updateAtividade = async ({ id, nome }: UpdateAtividade) => {
-
-    const atividade = await api.put(`/atividade/${id}`, { nome: nome })
-    return atividade
+    return demoStore.updateAtividade(id, nome)
 }
 
 export const deleteAtividade = async (id: string) => {
-    const atividade = await api.delete(`/atividade/${id}`)
-    return atividade
+    return demoStore.deleteAtividade(id)
 }

@@ -241,9 +241,9 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
     const handleSubmit = async (values: z.infer<typeof CreateProcessSquema>) => {
 
 
-        const lote_ids = values.tipo_id === '1' ? loteInfos : selected
+        const lotes = values.tipo_id === '1' ? loteInfos : selected
 
-        const res = createProcesso(values, lote_ids)
+        const res = createProcesso(values, lotes)
 
         if (!res) {
             toast.error("Erro nos campos ou Número de Processo já utilizado", {
@@ -269,12 +269,12 @@ export function CreateProcessForm({ atividades, cartorios, lotes, tipos }: Creat
 
             <div className="py-6 ">
                 <Link href={"/private/prefeitura"}>
-                    <Button variant={"outline"} className="bg-white hover:bg-gray-50">Retornar</Button>
+                    <Button variant={"outline"}>Retornar</Button>
                 </Link>
 
             </div>
             <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="p-10 rounded bg-white flex-col mb-5 border flex  gap-6 " >
+                <form onSubmit={form.handleSubmit(handleSubmit)} className="p-10 rounded bg-card flex-col mb-5 border border-primary/15 shadow-sm flex  gap-6 " >
                     <h2 className="text-lg">Dados:</h2>
                     <div className="flex gap-6 flex-wrap py-5 ">
                         <FormField name="num_processo" control={form.control} render={({ field }) => (

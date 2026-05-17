@@ -178,9 +178,9 @@ export function AdminTable<TData, TValue>({
         {(tipo === "Usuário") && (
           <div>
             {(table.getRowCount() > 1) &&
-              (<Button onClick={() => router.push(`/private/admin/usuario/${table.getSelectedRowModel().rows?.[0]?.id}`)} disabled={!table.getIsSomeRowsSelected()} variant={"outline"}>Visualizar</Button>
+              (<Button onClick={() => router.push(`/private/admin/usuario/${table.getSelectedRowModel().rows?.[0]?.id}`)} disabled={!table.getIsSomeRowsSelected()} variant={"outline"}>Editar</Button>
               ) || (
-                <Button onClick={() => router.push(`/private/admin/usuario/${table.getSelectedRowModel().rows?.[0]?.id}`)} disabled={!table.getIsAllRowsSelected()} variant={"outline"}>Visualizar</Button>
+                <Button onClick={() => router.push(`/private/admin/usuario/${table.getSelectedRowModel().rows?.[0]?.id}`)} disabled={!table.getIsAllRowsSelected()} variant={"outline"}>Editar</Button>
               )
             }
           </div>

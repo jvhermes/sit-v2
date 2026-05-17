@@ -65,7 +65,7 @@ export function ProcessCartorioTable<TData, TValue>({ columns, data, }: DataTabl
     return (
         <div >
 
-            <div className="bg-white p-5 border">
+            <div className="bg-card p-5 border border-primary/15 shadow-sm">
 
                 <div className="m-2">
                     <p>Filtros:</p>
@@ -129,7 +129,7 @@ export function ProcessCartorioTable<TData, TValue>({ columns, data, }: DataTabl
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} className="bg-gray-200 text-gray-700">
+                                        <TableHead key={header.id} className="bg-secondary text-secondary-foreground">
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(

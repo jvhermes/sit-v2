@@ -1,41 +1,38 @@
 "use client";
 
-import { createContext, useEffect, useState, ReactNode } from "react";
-import nookies from "nookies";
-import api from "@/lib/api";
-import { UserPerfilProps } from "@/types/types";
-
+import { createContext, ReactNode } from "react";
+import { Perfil, UserPerfilProps } from "@/types/types";
 
 interface AuthContextType {
   user: UserPerfilProps | null;
   loading: boolean;
 }
 
+const demoAdminUser: UserPerfilProps = {
+  id: "user-admin",
+  nome: "Administrador Demo",
+  email: "admin@demo.com",
+  ativo: true,
+  avatar: "1",
+  perfil: Perfil.ADMIN,
+  cartorio: {
+    id: "cartorio-centro",
+    nome: "Cartório Centro",
+  },
+  setor: {
+    id: "setor-urbano",
+    nome: "Planejamento Urbano",
+  },
+};
+
 export const AuthContext = createContext<AuthContextType>({
-  user: null,
-  loading: true,
+  user: demoAdminUser,
+  loading: false,
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<UserPerfilProps | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const { token } = nookies.get();
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-
-    api
-      .get("/user/me", { withCredentials: true })
-      .then((res) => setUser(res.data))
-      .catch(() => setUser(null))
-      .finally(() => setLoading(false));
-  }, []);
-
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user: demoAdminUser, loading: false }}>
       {children}
     </AuthContext.Provider>
   );

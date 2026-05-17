@@ -8,12 +8,11 @@ import { AuthContext } from "@/context/auth_provider";
 
 interface SidebarProps {
     isOpen: boolean;
-    onClose: () => void;
 }
-export default function Sidebar({ isOpen, onClose }: SidebarProps) {
+export default function Sidebar({ isOpen}: SidebarProps) {
 
 
-    const { user, loading } = useContext(AuthContext);
+    const { user} = useContext(AuthContext);
 
 
     return (

@@ -13,13 +13,14 @@ import { CloseProcessoSquema} from '@/schemas/process'
 
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from "@/components/ui/button"
-import { ProcessoPrefeitura } from "@prisma/client"
 import {closeProcesso } from "@/actions/processo"
 import { toast } from "sonner"
 
 type FormProps = {
 
-    processo: ProcessoPrefeitura
+    processo: {
+        id: number
+    }
 }
 export function CloseProcessoForm({ processo }: FormProps) {
 

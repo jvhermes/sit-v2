@@ -1,12 +1,10 @@
 "use server"
 
-import api from "@/lib/api"
+import { demoStore } from "@/data/demo-store"
 
 export const createCartorio = async (nome: string) => {
-    const cartorio = await api.post(`/cartorio`, { nome: nome })
-    return cartorio
+    return demoStore.createCartorio(nome)
 }
-
 
 interface UpdateCartorio {
     id: string
@@ -14,22 +12,13 @@ interface UpdateCartorio {
 }
 
 export const updateCartorio = async ({ id, nome }: UpdateCartorio) => {
-
-    const cartorio = await api.put(`/cartorio/${id}`, { nome: nome })
-    return cartorio
+    return demoStore.updateCartorio(id, nome)
 }
 
-
+export const listCartorio = async () => {
+    return demoStore.listCartorios()
+}
 
 export const deleteCartorio = async (id: string) => {
-
-    try {
-
-        const cartorio = await api.delete(`/cartorio/${id}`)
-        return cartorio
-    } catch (err) {
-        return null
-    }
-
-
+    return demoStore.deleteCartorio(id)
 }

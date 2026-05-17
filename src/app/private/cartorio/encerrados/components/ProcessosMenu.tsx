@@ -1,11 +1,10 @@
 "use client"
 import { ProcessTable } from "@/app/private/prefeitura/components/ProcessosTable"
-import { Button } from "@/components/ui/button"
-import { Processos, columns } from "@/app/private/prefeitura/columns"
-import { useState } from "react"
+import { Processos, createPrefeituraColumns } from "@/app/private/prefeitura/columns"
+import { useMemo, useState } from "react"
 import { ProcessCartorioTable } from "../../../cartorio/components/ProcessosCartorioTable"
-import { ProcessosCartorio } from "../../../cartorio/columns"
-import { columnsCartorio } from "../../../cartorio/columns"
+import { createCartorioColumns, ProcessosCartorio } from "../../../cartorio/columns"
+import { ProcessDirection, ProcessDirectionTabs } from "@/components/ProcessDirectionTabs"
 interface ProcessosMenuProps {
     processos: Processos[],
     processosCartorio: ProcessosCartorio[]
@@ -15,27 +14,28 @@ interface ProcessosMenuProps {
 export function ProcessosMenuEncerrados({ processos, processosCartorio }: ProcessosMenuProps) {
 
 
-    const [enviados, setEnviados] = useState(false)
-    const [recebidos, setRecebidos] = useState(true)
+    const [direction, setDirection] = useState<ProcessDirection>("recebidos")
+    const processosEnviadosColumns = useMemo(() => createCartorioColumns({
+        detailBasePath: "/private/cartorio/detalhes-c",
+        canDelete: false,
+    }), [])
+    const processosRecebidosColumns = useMemo(() => createPrefeituraColumns({
+        detailBasePath: "/private/cartorio/detalhes-p",
+        canDelete: false,
+    }), [])
 
-
-    async function changeButton(id: string) {
-        if (id !== "enviados") setEnviados(false); else { setEnviados(true) }
-        if (id !== "recebidos") setRecebidos(false); else { setRecebidos(true) }
-    }
     return (
         <div className="w-11/12  mt-2">
 
             <div className="flex flex-wrap  justify-center gap-8 py-2">
-                <Button variant={recebidos ? undefined : "secondary"} onClick={() => changeButton("recebidos")} >Recebidos</Button>
-                <Button variant={enviados ? undefined : "secondary"} onClick={() => changeButton("enviados")}>Enviados</Button>
+                <ProcessDirectionTabs value={direction} onChange={setDirection} />
 
             </div>
-            {enviados && (
-                <ProcessCartorioTable data={processosCartorio} columns={columnsCartorio} />
+            {direction === "enviados" && (
+                <ProcessCartorioTable data={processosCartorio} columns={processosEnviadosColumns} />
             )}
-            {recebidos && (
-                <ProcessTable data={processos} columns={columns} />
+            {direction === "recebidos" && (
+                <ProcessTable data={processos} columns={processosRecebidosColumns} />
             )}
         </div>
     )

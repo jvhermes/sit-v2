@@ -1,13 +1,10 @@
 "use server"
 
-import api from "@/lib/api"
+import { demoStore } from "@/data/demo-store"
 
 export const createSetor = async (nome: string) => {
-
-    const setor = await api.post(`/setor`, { nome: nome })
-    return setor
+    return demoStore.createSetor(nome)
 }
-
 
 interface UpdateSetor {
     id: string
@@ -15,15 +12,13 @@ interface UpdateSetor {
 }
 
 export const updateSetor = async ({ id, nome }: UpdateSetor) => {
-
-    const setor = await api.put(`/setor/${id}`, { nome: nome })
-    return setor
-
+    return demoStore.updateSetor(id, nome)
 }
 
-
+export const listSetor = async () => {
+    return demoStore.listSetores()
+}
 
 export const deleteSetor = async (id: string) => {
-    const setor = await api.delete(`/setor/${id}`)
-    return setor
+    return demoStore.deleteSetor(id)
 }

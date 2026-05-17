@@ -1,12 +1,9 @@
 "use server"
-import api from "@/lib/api"
 
-
-
+import { demoStore } from "@/data/demo-store"
 
 export const createTipo = async (nome: string) => {
-    const tipo = await api.post(`/tipo`, { nome: nome })
-    return tipo
+    return demoStore.createTipo(nome)
 }
 
 interface updateTipo {
@@ -15,14 +12,9 @@ interface updateTipo {
 }
 
 export const updateTipo = async ({ idTipo, nome }: updateTipo) => {
-
-    const tipo = await api.put(`/tipo/${idTipo}`, { nome: nome })
-    return tipo
+    return demoStore.updateTipo(idTipo, nome)
 }
 
-
-
 export const deleteTipo = async (id: number) => {
-    const tipo = await api.delete(`/tipo/${id}`)
-    return tipo
+    return demoStore.deleteTipo(id)
 }

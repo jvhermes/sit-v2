@@ -15,19 +15,13 @@ import Link from "next/link"
 import { toast } from "sonner";
 
 import { deleteProcesso } from "@/actions/processo";
+import { PrefeituraCollumn } from "@/types/types"
 
+export type Processos = PrefeituraCollumn
 
-export type Processos = {
-    id: number
-    numero: string,
-    tipo: string,
-    proprietario: string,
-    bairro: string,
-    quadra: string,
-    lote: string,
-    criado: string,
-    prazo: string,
-    status: string
+type ProcessoColumnsOptions = {
+    detailBasePath?: string
+    canDelete?: boolean
 }
 
 async function deleteProcessoEvent(id: number | unknown) {
@@ -49,7 +43,10 @@ async function deleteProcessoEvent(id: number | unknown) {
         })
     }
 }
-export const columns: ColumnDef<Processos>[] = [
+export const createPrefeituraColumns = ({
+    detailBasePath = "/private/prefeitura/detalhes-p",
+    canDelete = true,
+}: ProcessoColumnsOptions = {}): ColumnDef<PrefeituraCollumn>[] => [
 
 
     {
@@ -104,7 +101,7 @@ export const columns: ColumnDef<Processos>[] = [
         cell: (props) => {
             const value = props.getValue()
             if (value === 'pendente') {
-                return <span className="bg-gray-200 px-5 py-2 rounded ">Pendente</span>
+                return <span className="bg-secondary text-secondary-foreground px-5 py-2 rounded ">Pendente</span>
             }
             if (value === 'respondido') {
                 return <span className="bg-green-700 px-3 py-2 rounded text-white">Respondido</span>
@@ -124,10 +121,11 @@ export const columns: ColumnDef<Processos>[] = [
         cell: (props) => (
 
             <div className="flex gap-2">
-                <Link href={`/private/prefeitura/detalhes-p/${props.getValue()}`}>
-                    <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-500/90"><Eye /></Button>
+                <Link href={`${detailBasePath}/${props.getValue()}`}>
+                    <Button className="p-1 h-8 bg-primary hover:bg-primary/90"><Eye /></Button>
                 </Link>
-                <div >
+                {canDelete && (
+                <div>
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button className="p-1 h-8" variant={"destructive"}><Trash2 /></Button>
@@ -145,9 +143,12 @@ export const columns: ColumnDef<Processos>[] = [
                         </DialogContent>
                     </Dialog>
                 </div>
+                )}
             </div>
         ),
 
     },
 
 ]
+
+export const columns = createPrefeituraColumns()

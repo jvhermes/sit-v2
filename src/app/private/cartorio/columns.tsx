@@ -1,7 +1,7 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
-
+import { CartorioCollumn } from "@/types/types"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, Eye, Trash2 } from "lucide-react"
 import {
@@ -14,22 +14,15 @@ import {
 } from "@/components/ui/dialog"
 import Link from "next/link"
 import { toast } from "sonner";
-
 import { deleteProcessoCartorio } from "@/actions/processoCartorio";
 
+export type ProcessosCartorio = CartorioCollumn
 
-
-export type ProcessosCartorio = {
-    id: number
-    numero: string,
-    tipo: string,
-    proprietario: string,
-    bairro: string,
-    quadra: string,
-    lote: string,
-    criado: string,
-
+type ProcessoCartorioColumnsOptions = {
+    detailBasePath?: string
+    canDelete?: boolean
 }
+
 
 async function deleteProcessoEvent(id: number | unknown) {
 
@@ -50,7 +43,10 @@ async function deleteProcessoEvent(id: number | unknown) {
         })
     }
 }
-export const columnsCartorio: ColumnDef<ProcessosCartorio>[] = [
+export const createCartorioColumns = ({
+    detailBasePath = "/private/cartorio/detalhes-c",
+    canDelete = true,
+}: ProcessoCartorioColumnsOptions = {}): ColumnDef<CartorioCollumn>[] => [
 
     {
         accessorKey: "numero",
@@ -99,10 +95,11 @@ export const columnsCartorio: ColumnDef<ProcessosCartorio>[] = [
         cell: (props) => (
 
             <div className="flex gap-2">
-                <Link href={`/private/prefeitura/detalhes-c/${props.getValue()}`}>
-                    <Button className="p-1 h-8 bg-purple-500 hover:bg-purple-500/90"><Eye /></Button>
+                <Link href={`${detailBasePath}/${props.getValue()}`}>
+                    <Button className="p-1 h-8 bg-primary hover:bg-primary/90"><Eye /></Button>
                 </Link>
-                <div >
+                {canDelete && (
+                <div>
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button className="p-1 h-8" variant={"destructive"}><Trash2 /></Button>
@@ -120,6 +117,7 @@ export const columnsCartorio: ColumnDef<ProcessosCartorio>[] = [
                         </DialogContent>
                     </Dialog>
                 </div>
+                )}
             </div>
         ),
 
@@ -127,3 +125,5 @@ export const columnsCartorio: ColumnDef<ProcessosCartorio>[] = [
 
 
 ]
+
+export const columnsCartorio = createCartorioColumns()

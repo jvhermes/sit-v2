@@ -1,4 +1,26 @@
+export type PrefeituraCollumn = {
+    id: number
+    numero: string,
+    tipo: string,
+    proprietario: string,
+    bairro: string,
+    quadra: string,
+    lote: string,
+    criado: string,
+    prazo: string,
+    status: string
+}
 
+export type CartorioCollumn = {
+    id: number
+    numero: string,
+    tipo: string,
+    proprietario: string,
+    bairro: string,
+    quadra: string,
+    lote: string,
+    criado: string,
+}
 export type Lote = {
     id: number,
     codigo_imovel: string,

@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { z } from "zod"
-
+import { useRouter } from 'next/navigation';
 import {
     Form,
     FormControl,
@@ -17,9 +17,11 @@ import {
 import { useState } from "react";
 import { LogUserSchema } from "@/schemas/user";
 import { login } from "@/actions/user";
+
+
 export function LogInForm() {
     const [error, setError] = useState("")
-
+    const router = useRouter();
     const form = useForm<z.infer<typeof LogUserSchema>>({
         resolver: zodResolver(LogUserSchema),
         defaultValues: {
@@ -29,9 +31,14 @@ export function LogInForm() {
     })
 
     const handleSubmit = async (values: z.infer<typeof LogUserSchema>) => {
+        
         const res = await login(values)
         if (res?.error) {
             setError(res.error)
+        } else {
+
+            window.localStorage.setItem("sit-demo-view", "prefeitura");
+            router.push("/private/prefeitura");
         }
     }
     return (

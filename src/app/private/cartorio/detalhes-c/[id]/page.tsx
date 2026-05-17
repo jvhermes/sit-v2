@@ -1,163 +1,45 @@
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { Title } from "@/components/Title"
+import { getProcessoCartorio } from "@/actions/processoCartorio"
+import { ProcessoCartorioDetail } from "@/types/types"
+import { ProcessoActions } from "@/features/processos/components/ProcessoActions"
+import { ProcessoCartorioDetails } from "@/features/processos/components/ProcessoCartorioDetails"
 
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import React from 'react'
-import { Title } from '@/components/Title'
-import { format } from 'date-fns'
-import { Card, CardContent } from '@/components/ui/card'
-import { FaFilePdf } from 'react-icons/fa'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Textarea } from '@/components/ui/textarea'
-import api from '@/lib/api'
-import { ProcessoCartorioDetail} from '@/types/types'
-
-
-const fechData = async (id: string) => {
-
-  const processo:ProcessoCartorioDetail = await api.get(`/processoc/${id}`)
-
-
-  return processo
-}
-export default async function page({ params}: {
-  params: { id: string }
-}) {
-
-  const processo = await fechData(params.id)
+export default async function page({ params }: { params: { id: string } }) {
+  const processo = await getProcessoCartorio(params.id) as ProcessoCartorioDetail | null
 
   return (
     <>
+      <Title name="Detalhes do Processo" text="" />
 
-      <Title name={`Detalhes do Processo`} text='' />
-
-      {processo && (
-        <div className='w-10/12 mt-10'>
-          <div className='py-6'>
-            <Link href={ "/private/cartorio"}>
-              <Button variant={"outline"}>Retornar</Button>
+      {processo ? (
+        <div className="w-10/12 mt-10">
+          <div className="py-6">
+            <Link href="/private/cartorio">
+              <Button variant="outline">Retornar</Button>
             </Link>
           </div>
-          <section className='p-10 flex-col bg-white mb-5 border rounded flex  gap-4'>
-          <h2 className='text-xl'>Processo {processo.num_processo}</h2>
-            <div className='flex flex-wrap gap-3 my-2'>
-              <p className='py-2 pr-2'>Tipo: <strong>{processo.tipo.nome.toLowerCase()}</strong></p>
-              <p className='p-2'>Criado em: <strong>{format(processo.criado_em, "dd/MM/yyy")}</strong></p>
-              <p className='p-2'>Ano: <strong>{processo.ano}</strong></p>
-              <p className='p-2'>Enviado por: <strong>{processo.setor.nome}</strong></p>
-            </div>
-
-            {(processo.tipo.tipo !== "OUTRO") && (
-              <div>
-                <p className=' my-3'>Descrições Recebidas:</p>
-                <Table className='border'>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Novo Lote</TableHead>
-                      <TableHead>Área</TableHead>
-                      <TableHead>Testada</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {processo.descricao_lotes.map((item, index) => {
-                      return (
-                        <TableRow key={index}>
-                          <TableCell>{item.lote}</TableCell>
-                          <TableCell>{item.area}</TableCell>
-                          <TableCell>{item.testada}</TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-            {(processo.tipo.tipo === "OUTRO") && (
-              <div>
-                <p className='text-xl my-3'>Pessoas Citadas:</p>
-                <Table className='border'>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Nome</TableHead>
-                      <TableHead>CPF</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Telefone</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {processo.descricao_pessoas.map((item, index) => {
-                      return (
-                        <TableRow key={index}>
-                          <TableCell>{item.nome}</TableCell>
-                          <TableCell>{item.cpf}</TableCell>
-                          <TableCell>{item.email}</TableCell>
-                          <TableCell>{item.telefone}</TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            )}
-
-
-            <div className='flex gap-4 w-full flex-wrap'>
-              <p>Lotes Incluídos:</p>
-              {processo.lote_vinculado.map((item, index) => {
-                return (
-                  <div key={index} className='w-full min-w-[350px] '>
-                    <Card>
-                      <CardContent className='p-6 flex'>
-                        <div >
-                          <p>Lote: <strong>{item.lote}</strong></p>
-                          <p>Código do Imóvel: <strong>{item.codigo_imovel}</strong></p>
-                          <p>Proprietário: <strong>{item.proprietario}</strong></p>
-                          <p>Bairro: <strong>{item.bairro}</strong></p>
-                          <p>Quadra: <strong>{item.quadra}</strong></p>
-                        
-                          <p>Número: <strong>{item.numero}</strong></p>
-                          <p>Logradouro: <strong>{item.logradouro}</strong></p>
-                          <p>Área: <strong>{item.area_total}</strong></p>
-                          <p>Testada: <strong>{item.testada}</strong></p>
-                          <p>Matrícula: <strong>{item.matricula || "Não informada"}</strong></p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                )
-              })}
-
-            </div>
-            <div>
-              <p className='py-2'>Obvservações:</p>
-              <Textarea
-                value={processo.observacao}
-                className="resize-none h-[120px] w-full"
-                readOnly={true}
+          <ProcessoCartorioDetails
+            processo={processo}
+            descricaoLabel="Descrições Enviadas:"
+            observacaoLabel="Observações Enviadas:"
+            actions={
+              <ProcessoActions
+                id={processo.id}
+                kind="cartorio"
+                view="cartorio"
+                direction="enviados"
+                ativo={processo.ativo}
               />
-            </div>
-            {processo.ativo && (
-              <Button variant={"destructive"} className='mx-auto my-3'> Cancelar envio</Button>
-            )}
-            {!processo.ativo && (
-              <Button className="flex gap-2 mx-auto my-3" variant={"outline"}>Gerar PDF <FaFilePdf className="text-red-600" size={17} /></Button>
-            )}
-
-          </section>
-
+            }
+          />
         </div>
-      ) || (
-          <div className='mt-10'>
-            <p>{"Processo não encontrado :("}</p>
-          </div>
-        )}
+      ) : (
+        <div className="mt-10">
+          <p>{"Processo não encontrado :("}</p>
+        </div>
+      )}
     </>
   )
 }
