@@ -33,7 +33,7 @@ export function ProcessoPrefeituraDetails({
   respostaLabel = "Resposta:",
 }: ProcessoPrefeituraDetailsProps) {
   return (
-    <section className="p-10 flex-col mb-5 border border-primary/15 rounded bg-card flex gap-4 shadow-sm">
+    <section data-print-area className="p-10 flex-col mb-5 border border-primary/15 rounded bg-card flex gap-4 shadow-sm">
       <h2 className="text-xl">Processo {processo.num_processo}</h2>
       <div className="flex flex-wrap gap-3 my-2">
         <p className="py-2 pr-2">Tipo: <strong>{processo.tipo.nome.toLowerCase()}</strong></p>

@@ -26,7 +26,7 @@ export function ProcessoCartorioDetails({
   observacaoLabel = "Observações Enviadas:",
 }: ProcessoCartorioDetailsProps) {
   return (
-    <section className="p-10 bg-card flex-col mb-5 border border-primary/15 rounded flex gap-4 shadow-sm">
+    <section data-print-area className="p-10 bg-card flex-col mb-5 border border-primary/15 rounded flex gap-4 shadow-sm">
       <h2 className="text-xl">Processo {processo.num_processo}</h2>
       <div className="flex flex-wrap gap-3 my-2">
         <p className="py-2 pr-2">Tipo: <strong>{processo.tipo.nome.toLowerCase()}</strong></p>

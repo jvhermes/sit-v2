@@ -23,7 +23,7 @@ export default function Layout({
                     <SidebarProvider defaultOpen={defaultOpen}>
                         <AppSidebar />
                         <div className="w-full min-h-screen flex flex-col items-center bg-background">
-                            <div className="w-full flex justify-between h-15 px-8 py-4 border-b border-primary/10 bg-white/70 backdrop-blur">
+                            <div className="no-print w-full flex justify-between h-15 px-8 py-4 border-b border-primary/10 bg-white/70 backdrop-blur">
                                 <SidebarTrigger />
 
                                 <LogOffButton/>

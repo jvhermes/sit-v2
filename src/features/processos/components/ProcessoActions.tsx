@@ -81,8 +81,12 @@ export function ProcessoActions({
     })
   }
 
+  function exportCurrentPage() {
+    window.print()
+  }
+
   return (
-    <div className="w-full flex flex-col gap-4">
+    <div className="no-print w-full flex flex-col gap-4">
       <div className="m-auto flex flex-wrap justify-center gap-3 p-4">
         {permissions.canRespond && (
           <Button variant="outline" onClick={() => setResponseOpen((current) => !current)}>
@@ -126,7 +130,7 @@ export function ProcessoActions({
         )}
 
         {permissions.canGeneratePdf && (
-          <Button className="flex gap-2 my-2" variant="outline">
+          <Button className="flex gap-2 my-2" variant="outline" onClick={exportCurrentPage}>
             Gerar PDF <FaFilePdf className="text-red-600" size={17} />
           </Button>
         )}
