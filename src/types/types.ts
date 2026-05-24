@@ -55,6 +55,7 @@ export type UserAdminProps = {
     id: string;
     nome: string;
     email: string;
+    senha: string;
     ativo: boolean;
     avatar: string;
     perfil: Perfil;

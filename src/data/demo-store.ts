@@ -103,6 +103,7 @@ const initialState = (): DemoState => ({
       id: "user-admin",
       nome: "Administrador Demo",
       email: "admin@demo.com",
+      senha: "123456",
       ativo: true,
       avatar: "1",
       perfil: Perfil.ADMIN,
@@ -115,6 +116,7 @@ const initialState = (): DemoState => ({
       id: "user-prefeitura",
       nome: "Prefeitura Demo",
       email: "prefeitura@demo.com",
+      senha: "123456",
       ativo: true,
       avatar: "2",
       perfil: Perfil.PREFEITURA,
@@ -127,6 +129,7 @@ const initialState = (): DemoState => ({
       id: "user-cartorio",
       nome: "Cartório Demo",
       email: "cartorio@demo.com",
+      senha: "123456",
       ativo: true,
       avatar: "3",
       perfil: Perfil.CARTORIO,
@@ -341,6 +344,19 @@ function formatDate(date: string) {
   return new Intl.DateTimeFormat("pt-BR").format(new Date(date));
 }
 
+function toPerfilUser(user: UserAdminProps): UserPerfilProps {
+  return {
+    id: user.id,
+    nome: user.nome,
+    email: user.email,
+    ativo: user.ativo,
+    avatar: user.avatar,
+    perfil: user.perfil,
+    cartorio: user.cartorio,
+    setor: user.setor,
+  };
+}
+
 function prefeituraToColumn(processo: ProcessoPrefeituraDetail): PrefeituraCollumn {
   const lote = processo.lote_vinculado[0];
 
@@ -376,16 +392,13 @@ function cartorioToColumn(processo: ProcessoCartorioDetail): CartorioCollumn {
 export const demoStore = {
   getDemoUser(): UserPerfilProps {
     const user = state().usuarios[0];
-    return {
-      id: user.id,
-      nome: user.nome,
-      email: user.email,
-      ativo: user.ativo,
-      avatar: user.avatar,
-      perfil: user.perfil,
-      cartorio: user.cartorio,
-      setor: user.setor,
-    };
+    return toPerfilUser(user);
+  },
+
+  authenticateUsuario(email: string, senha: string) {
+    const user = state().usuarios.find((usuario) => usuario.email.toLowerCase() === email.toLowerCase());
+    if (!user || user.senha !== senha || !user.ativo) return null;
+    return toPerfilUser(user);
   },
 
   listAtividades() {
@@ -529,6 +542,7 @@ export const demoStore = {
       id: makeId("user"),
       nome: input.nome,
       email: input.email,
+      senha: input.senha,
       ativo: input.ativo,
       avatar: input.avatar,
       perfil: input.perfil,
@@ -551,6 +565,7 @@ export const demoStore = {
 
     usuario.nome = input.nome;
     usuario.email = input.email;
+    usuario.senha = input.senha;
     usuario.ativo = input.ativo;
     usuario.avatar = input.avatar;
     usuario.perfil = input.perfil;
@@ -562,8 +577,11 @@ export const demoStore = {
     return usuario;
   },
 
-  updateSenha(id: string) {
-    return this.getUsuario(id);
+  updateSenha(id: string, senha: string) {
+    const usuario = this.getUsuario(id);
+    if (!usuario) return null;
+    usuario.senha = senha;
+    return usuario;
   },
 
   listProcessosPrefeitura(ativo: boolean) {

@@ -17,6 +17,8 @@ import {
 import { useState } from "react";
 import { LogUserSchema } from "@/schemas/user";
 import { login } from "@/actions/user";
+import { DEMO_USER_STORAGE_KEY } from "@/context/auth_provider";
+import { Perfil } from "@/types/types";
 
 
 export function LogInForm() {
@@ -35,10 +37,18 @@ export function LogInForm() {
         const res = await login(values)
         if (res?.error) {
             setError(res.error)
-        } else {
+            return
+        }
 
-            window.localStorage.setItem("sit-demo-view", "prefeitura");
-            router.push("/private/prefeitura");
+        if (res?.data?.user) {
+            const user = res.data.user
+            const view = user.perfil === Perfil.CARTORIO ? "cartorio" : "prefeitura"
+
+            window.localStorage.setItem(DEMO_USER_STORAGE_KEY, JSON.stringify(user));
+            window.localStorage.setItem("sit-demo-view", view);
+            router.push(view === "cartorio" ? "/private/cartorio" : "/private/prefeitura");
+        } else {
+            setError("Email ou senha inválidos")
         }
     }
     return (

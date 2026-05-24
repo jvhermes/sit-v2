@@ -24,5 +24,5 @@ export const CreateUserSchema = z.object({
 
 export const LogUserSchema = z.object({
     email: z.string().email({ message: 'Email inválido' }),
-    senha: z.string().min(2, { message: 'Mínimo de 6 caracteres' }),
+    senha: z.string().min(6, { message: 'Mínimo de 6 caracteres' }),
 })

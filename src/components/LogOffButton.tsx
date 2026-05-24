@@ -4,12 +4,14 @@ import { Button } from "@/components/ui/button";
 import { signout } from "@/actions/user";
 import { RiLogoutBoxRLine } from "react-icons/ri"
 import { useRouter } from "next/navigation";
+import { DEMO_USER_STORAGE_KEY } from "@/context/auth_provider";
 
 export function LogOffButton() {
     const router = useRouter()
 
     const logOff = async () => {
         await signout()
+        window.localStorage.removeItem(DEMO_USER_STORAGE_KEY)
         window.localStorage.removeItem("sit-demo-view")
         router.push("/");
     }

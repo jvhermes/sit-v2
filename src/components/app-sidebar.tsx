@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { AuthContext } from "@/context/auth_provider"
 import { DemoView, useDemoView } from "@/context/demo_view_provider"
+import { Perfil } from "@/types/types"
 import {
   Sidebar,
   SidebarContent,
@@ -80,11 +81,25 @@ export function AppSidebar() {
   const router = useRouter()
 
   useEffect(() => {
+    if (!user || user.perfil !== Perfil.ADMIN) return
+
     const routeView = viewFromPath(pathname)
     if (routeView && routeView !== view) {
       setView(routeView)
     }
-  }, [pathname, setView, view])
+  }, [pathname, setView, user, view])
+
+  useEffect(() => {
+    if (!user || user.perfil === Perfil.ADMIN) return
+
+    const profileView = user.perfil === Perfil.CARTORIO ? "cartorio" : "prefeitura"
+    const routeView = viewFromPath(pathname)
+
+    if (view !== profileView) setView(profileView)
+    if (routeView && routeView !== profileView) {
+      router.replace(profileView === "cartorio" ? "/private/cartorio" : "/private/prefeitura")
+    }
+  }, [pathname, router, setView, user, view])
 
   const changeView = (nextView: DemoView) => {
     setView(nextView)
@@ -93,8 +108,10 @@ export function AppSidebar() {
 
   if (!user) return null
 
-  const navItems = navByView[view]
-  const label = view === "prefeitura" ? "SIT - Prefeitura" : "SIT - Cartórios"
+  const effectiveView: DemoView =
+    user.perfil === Perfil.CARTORIO ? "cartorio" : user.perfil === Perfil.PREFEITURA ? "prefeitura" : view
+  const navItems = navByView[effectiveView].filter((item) => user.perfil === Perfil.ADMIN || item.title !== "Configurações")
+  const label = effectiveView === "prefeitura" ? "SIT - Prefeitura" : "SIT - Cartórios"
 
   return (
     <Sidebar>
@@ -109,26 +126,28 @@ export function AppSidebar() {
           <span className="text-xs uppercase text-gray-500">{user.perfil.toLowerCase()}</span>
         </div>
 
-        <div className="grid w-11/12 grid-cols-2 rounded-md border border-sidebar-border bg-sidebar-accent p-1">
-          <Button
-            type="button"
-            size="sm"
-            variant={view === "prefeitura" ? "default" : "secondary"}
-            className="rounded-sm"
-            onClick={() => changeView("prefeitura")}
-          >
-            Prefeitura
-          </Button>
-          <Button
-            type="button"
-            size="sm"
-            variant={view === "cartorio" ? "default" : "secondary"}
-            className="rounded-sm"
-            onClick={() => changeView("cartorio")}
-          >
-            Cartório
-          </Button>
-        </div>
+        {user.perfil === Perfil.ADMIN && (
+          <div className="grid w-11/12 grid-cols-2 rounded-md border border-sidebar-border bg-sidebar-accent p-1">
+            <Button
+              type="button"
+              size="sm"
+              variant={view === "prefeitura" ? "default" : "secondary"}
+              className="rounded-sm"
+              onClick={() => changeView("prefeitura")}
+            >
+              Prefeitura
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              variant={view === "cartorio" ? "default" : "secondary"}
+              className="rounded-sm"
+              onClick={() => changeView("cartorio")}
+            >
+              Cartório
+            </Button>
+          </div>
+        )}
 
         <SidebarGroup>
           <SidebarGroupLabel>{label}</SidebarGroupLabel>

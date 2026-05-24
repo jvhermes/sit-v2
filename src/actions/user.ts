@@ -40,7 +40,10 @@ export const login = async (values: z.infer<typeof LogUserSchema>) => {
     const validateFields = LogUserSchema.safeParse(values)
     if (!validateFields.success) return { error: "Campos inválidos" }
 
-    return { data: { user: demoStore.getDemoUser() } }
+    const user = demoStore.authenticateUsuario(validateFields.data.email, validateFields.data.senha)
+    if (!user) return { error: "Email ou senha inválidos" }
+
+    return { data: { user } }
 }
 
 export const signout = async () => {
@@ -52,7 +55,7 @@ export const getMe = async () => {
 }
 
 export const updateSenha = async (id: string, senha: string) => {
-    const user = demoStore.updateSenha(id)
+    const user = demoStore.updateSenha(id, senha)
     revalidatePath("/private/admin")
     return user
 }
